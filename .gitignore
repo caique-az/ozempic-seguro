@@ -107,12 +107,15 @@ Desktop.ini
 *.jpeg
 *.pdf
 
-# Ignore PDF and images in root, but not in src/assets
-!/src/assets/*.png
-!/src/assets/*.jpg
-!/src/assets/*.jpeg
-!/src/assets/*.pdf 
+# Ignore PDF and images in root, but not in src/ozempic_seguro/assets
+!/src/ozempic_seguro/assets/*.png
+!/src/ozempic_seguro/assets/*.jpg
+!/src/ozempic_seguro/assets/*.jpeg
+!/src/ozempic_seguro/assets/*.pdf 
 # Temporary test files
 tests/test_database.py.bak
 temp/
 tmp/
+
+# Local virtualenv
+.venv/
