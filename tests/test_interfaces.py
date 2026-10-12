@@ -1,6 +1,7 @@
 """
 Testes para interfaces de repositórios.
 """
+
 from abc import ABC
 
 from ozempic_seguro.repositories.interfaces import (

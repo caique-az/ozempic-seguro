@@ -1,6 +1,7 @@
 """
 Testes completos para exceções customizadas.
 """
+
 import pytest
 
 from ozempic_seguro.core.exceptions import (

@@ -1,6 +1,7 @@
 """
 Testes simplificados para SessionManager.
 """
+
 import pytest
 from ozempic_seguro.session.session_manager import SessionManager
 

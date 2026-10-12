@@ -1,6 +1,7 @@
 """
 Testes completos para SessionManager - Cobertura máxima.
 """
+
 import pytest
 from unittest.mock import MagicMock
 

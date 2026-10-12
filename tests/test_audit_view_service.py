@@ -1,6 +1,7 @@
 """
 Testes para AuditViewService - Serviço de visualização de auditoria.
 """
+
 import pytest
 
 from ozempic_seguro.services.audit_view_service import (

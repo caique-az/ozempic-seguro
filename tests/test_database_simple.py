@@ -2,6 +2,7 @@
 Testes simplificados para o DatabaseManager.
 Evita problemas com singleton e locks de arquivo.
 """
+
 import pytest
 import tempfile
 import os

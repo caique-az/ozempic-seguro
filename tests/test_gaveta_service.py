@@ -1,6 +1,7 @@
 """
 Testes para GavetaService - Cobertura de operações de gavetas.
 """
+
 import pytest
 from unittest.mock import patch, MagicMock
 

@@ -1,6 +1,7 @@
 """
 Testes para TimerManager - Controle de timer e bloqueios do sistema.
 """
+
 import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch

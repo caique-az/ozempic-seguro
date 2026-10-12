@@ -1,6 +1,7 @@
 """
 Testes para DatabaseManager - Wrapper de banco de dados.
 """
+
 import pytest
 import warnings
 

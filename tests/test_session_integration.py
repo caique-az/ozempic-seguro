@@ -1,6 +1,7 @@
 """
 Testes de integração para módulo session.
 """
+
 import pytest
 
 from ozempic_seguro.session.session_manager import SessionManager

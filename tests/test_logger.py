@@ -1,6 +1,7 @@
 """
 Testes para módulo de logging.
 """
+
 import pytest
 
 from ozempic_seguro.core.logger import (

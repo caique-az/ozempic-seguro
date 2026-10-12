@@ -1,6 +1,7 @@
 """
 Testes para DatabaseConnection - Gerenciamento de conexão com banco.
 """
+
 import pytest
 import sqlite3
 

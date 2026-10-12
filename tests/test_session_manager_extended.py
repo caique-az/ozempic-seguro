@@ -1,6 +1,7 @@
 """
 Testes estendidos para SessionManager - Cobertura adicional.
 """
+
 import pytest
 from unittest.mock import MagicMock
 

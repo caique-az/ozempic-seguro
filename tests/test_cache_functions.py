@@ -1,6 +1,7 @@
 """
 Testes para funções de cache globais.
 """
+
 import pytest
 
 from ozempic_seguro.core.cache import (

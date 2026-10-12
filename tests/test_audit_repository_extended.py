@@ -1,6 +1,7 @@
 """
 Testes estendidos para AuditRepository - Cobertura adicional.
 """
+
 import pytest
 
 from ozempic_seguro.repositories.audit_repository import AuditRepository

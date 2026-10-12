@@ -1,6 +1,7 @@
 """
 Testes para UserService usando mocks dos repositories.
 """
+
 import pytest
 from unittest.mock import Mock, patch
 from ozempic_seguro.services.user_service import UserService
@@ -89,7 +90,9 @@ class TestUserService:
     def test_create_user_invalid_input(self, user_service_with_mocks):
         """Testa falha na criação com dados inválidos - deve lançar InvalidUserDataError"""
         with pytest.raises(InvalidUserDataError):
-            user_service_with_mocks.create_user(name="", username="u", password="123", user_type="invalido")
+            user_service_with_mocks.create_user(
+                name="", username="u", password="123", user_type="invalido"
+            )
 
     def test_get_all_users(self, user_service_with_mocks, mock_user_repo):
         """Testa listagem de todos os usuários"""

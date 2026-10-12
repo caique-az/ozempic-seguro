@@ -1,6 +1,7 @@
 """
 Testes para ServiceFactory - Injeção de dependências.
 """
+
 import pytest
 
 from ozempic_seguro.services.service_factory import (

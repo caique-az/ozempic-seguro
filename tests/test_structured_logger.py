@@ -1,6 +1,7 @@
 """
 Testes para StructuredLogger - Sistema de logging estruturado.
 """
+
 import logging
 import json
 

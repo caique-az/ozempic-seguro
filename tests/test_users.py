@@ -2,6 +2,7 @@
 """
 Script para verificar os usuários criados.
 """
+
 import sys
 import os
 

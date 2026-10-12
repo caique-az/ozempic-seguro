@@ -1,6 +1,7 @@
 """
 Testes para LoginAttemptsManager - Controle de tentativas de login.
 """
+
 import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch

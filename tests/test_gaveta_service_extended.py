@@ -1,6 +1,7 @@
 """
 Testes estendidos para GavetaService - Cobertura adicional.
 """
+
 import pytest
 
 from ozempic_seguro.services.gaveta_service import GavetaService

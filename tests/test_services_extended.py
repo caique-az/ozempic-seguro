@@ -1,6 +1,7 @@
 """
 Testes estendidos para serviços - Cobertura adicional.
 """
+
 import pytest
 
 from ozempic_seguro.services.auth_service import AuthService

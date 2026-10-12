@@ -1,6 +1,7 @@
 """
 Testes para AuditService - Serviço de auditoria.
 """
+
 import pytest
 
 from ozempic_seguro.services.audit_service import AuditService

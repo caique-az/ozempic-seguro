@@ -1,6 +1,7 @@
 """
 Testes estendidos para UserRepository - Cobertura adicional.
 """
+
 import pytest
 import uuid
 

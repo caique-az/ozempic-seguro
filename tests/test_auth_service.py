@@ -1,6 +1,7 @@
 """
 Tests for AuthService - Authentication service.
 """
+
 import pytest
 
 from ozempic_seguro.services.auth_service import (

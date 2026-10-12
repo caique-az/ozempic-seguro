@@ -1,6 +1,7 @@
 """
 Testes para UserRepository - Cobertura de operações CRUD e autenticação.
 """
+
 import pytest
 
 from ozempic_seguro.repositories.user_repository import UserRepository

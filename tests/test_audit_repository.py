@@ -1,6 +1,7 @@
 """
 Testes para AuditRepository - Operações de auditoria.
 """
+
 import pytest
 from datetime import datetime
 
@@ -41,9 +42,7 @@ class TestAuditRepository:
 
     def test_create_log_without_user(self):
         """Testa criação de log sem usuário (ações de sistema)"""
-        log_id = self.repo.create_log(
-            user_id=None, action="SYSTEM_ACTION", affected_table="SYSTEM"
-        )
+        log_id = self.repo.create_log(user_id=None, action="SYSTEM_ACTION", affected_table="SYSTEM")
 
         assert log_id is not None
 

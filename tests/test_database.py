@@ -3,6 +3,7 @@ Testes para DatabaseManager e DatabaseConnection.
 
 Testa a camada de persistência usando banco SQLite.
 """
+
 import pytest
 import tempfile
 import os

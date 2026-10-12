@@ -1,6 +1,7 @@
 """
 Testes para o sistema de cache.
 """
+
 import time
 from ozempic_seguro.core.cache import MemoryCache, cached, invalidate_cache, get_cache_stats
 

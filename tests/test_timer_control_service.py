@@ -1,6 +1,7 @@
 """
 Testes para TimerControlService - Serviço de controle de timer.
 """
+
 import pytest
 
 from ozempic_seguro.services.timer_control_service import (

@@ -6,12 +6,15 @@ As credenciais são lidas das variáveis de ambiente:
   OZEMPIC_ADMIN_USERNAME  (padrão: "00")
   OZEMPIC_ADMIN_PASSWORD  (padrão: "admin@2025")
 """
+
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 from ozempic_seguro.repositories.database import DatabaseManager
 from ozempic_seguro.repositories.security import hash_password
+
 
 def reset_admin_password():
     print("=== RESET DE SENHA DO ADMIN ===\n")
@@ -27,8 +30,7 @@ def reset_admin_password():
 
     # Atualiza senha do usuário conforme variável de ambiente
     db.cursor.execute(
-        "UPDATE usuarios SET senha_hash = ? WHERE username = ?",
-        (new_hash, admin_username)
+        "UPDATE usuarios SET senha_hash = ? WHERE username = ?", (new_hash, admin_username)
     )
     db.conn.commit()
 
@@ -43,6 +45,7 @@ def reset_admin_password():
         print("\nTeste de login bem-sucedido!")
     else:
         print("\nErro no teste de login!")
+
 
 if __name__ == "__main__":
     reset_admin_password()

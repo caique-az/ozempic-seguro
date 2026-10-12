@@ -1,6 +1,7 @@
 """
 Testes estendidos para MemoryCache - Cobertura adicional.
 """
+
 import pytest
 
 from ozempic_seguro.core.cache import MemoryCache, cached

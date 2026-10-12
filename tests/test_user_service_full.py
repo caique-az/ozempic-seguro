@@ -1,6 +1,7 @@
 """
 Testes completos para UserService - Cobertura máxima.
 """
+
 import pytest
 import uuid
 
@@ -48,7 +49,10 @@ class TestUserServiceCreateUser:
         unique_username = f"test_{uuid.uuid4().hex[:8]}"
 
         success, msg = self.service.create_user(
-            name="Test User", username=unique_username, password="ValidPass123!", user_type="vendedor"
+            name="Test User",
+            username=unique_username,
+            password="ValidPass123!",
+            user_type="vendedor",
         )
 
         assert success is True
@@ -64,7 +68,10 @@ class TestUserServiceCreateUser:
         """Testa criação com senha vazia"""
         with pytest.raises((InvalidUserDataError, WeakPasswordError)):
             self.service.create_user(
-                name="Test User", username=f"test_{uuid.uuid4().hex[:8]}", password="", user_type="vendedor"
+                name="Test User",
+                username=f"test_{uuid.uuid4().hex[:8]}",
+                password="",
+                user_type="vendedor",
             )
 
     def test_create_user_invalid_type(self):

@@ -2,6 +2,7 @@
 """
 Script de teste para verificar autenticação.
 """
+
 import sys
 import os
 

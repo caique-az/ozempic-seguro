@@ -1,6 +1,7 @@
 """
 Testes para GavetaRepository - Cobertura de operações de gavetas.
 """
+
 import pytest
 
 from ozempic_seguro.repositories.gaveta_repository import GavetaRepository

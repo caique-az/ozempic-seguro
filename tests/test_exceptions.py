@@ -3,6 +3,7 @@ Testes para exceções customizadas do sistema.
 
 Verifica hierarquia, mensagens e serialização das exceções.
 """
+
 import pytest
 from ozempic_seguro.core.exceptions import (
     # Base

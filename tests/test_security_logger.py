@@ -1,6 +1,7 @@
 """
 Testes para SecurityLogger - Logging de segurança.
 """
+
 from datetime import datetime
 
 from ozempic_seguro.repositories.security_logger import SecurityLogger

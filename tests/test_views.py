@@ -1,6 +1,7 @@
 """
 Testes para Views com componentes UI mockados.
 """
+
 from unittest.mock import Mock, patch
 
 

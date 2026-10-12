@@ -1,6 +1,7 @@
 """
 Testes para UserRegistrationService - Serviço de registro de usuário.
 """
+
 import pytest
 import uuid
 
@@ -33,14 +34,18 @@ class TestUserRegistrationService:
 
     def test_register_empty_name(self):
         """Testa registro com nome vazio"""
-        result = self.service.register(name="", username="12345678", password="1234", user_type="vendedor")
+        result = self.service.register(
+            name="", username="12345678", password="1234", user_type="vendedor"
+        )
 
         assert result.success is False
         assert len(result.errors) > 0
 
     def test_register_empty_username(self):
         """Testa registro com username vazio"""
-        result = self.service.register(name="Test User", username="", password="1234", user_type="vendedor")
+        result = self.service.register(
+            name="Test User", username="", password="1234", user_type="vendedor"
+        )
 
         assert result.success is False
         assert len(result.errors) > 0

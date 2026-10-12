@@ -1,6 +1,7 @@
 """
 Testes para UserManagementService - Serviço de gerenciamento de usuários.
 """
+
 import pytest
 
 from ozempic_seguro.services.user_management_service import (

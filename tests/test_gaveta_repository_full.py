@@ -1,6 +1,7 @@
 """
 Testes completos para GavetaRepository.
 """
+
 import pytest
 
 from ozempic_seguro.repositories.gaveta_repository import GavetaRepository

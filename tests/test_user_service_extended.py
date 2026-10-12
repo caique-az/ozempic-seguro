@@ -1,6 +1,7 @@
 """
 Testes estendidos para UserService - Cobertura adicional.
 """
+
 import pytest
 
 from ozempic_seguro.services.user_service import UserService
@@ -97,7 +98,10 @@ class TestUserServiceValidation:
 
         # Criação deve funcionar
         success, msg = self.service.create_user(
-            name="Test User Valid", username=unique_username, password="ValidPass123!", user_type="vendedor"
+            name="Test User Valid",
+            username=unique_username,
+            password="ValidPass123!",
+            user_type="vendedor",
         )
 
         assert success is True
