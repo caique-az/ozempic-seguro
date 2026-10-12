@@ -2,10 +2,10 @@
 Componentes comuns: Header, ImageCache, MainButton
 """
 
-import os
-
 import customtkinter
 from PIL import Image
+
+from ...paths import ASSETS_DIR
 
 
 class ImageCache:
@@ -17,9 +17,7 @@ class ImageCache:
     @staticmethod
     def get_logo():
         if ImageCache._logo_img is None:
-            logo_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), "..", "..", "assets", "logo.jpg")
-            )
+            logo_path = ASSETS_DIR / "logo.jpg"
             imagem = Image.open(logo_path)
             ImageCache._logo_img = customtkinter.CTkImage(imagem, size=(60, 60))
         return ImageCache._logo_img
@@ -27,9 +25,7 @@ class ImageCache:
     @staticmethod
     def get_digital():
         if ImageCache._digital_img is None:
-            digital_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), "..", "..", "assets", "digital.png")
-            )
+            digital_path = ASSETS_DIR / "digital.png"
             imagem = Image.open(digital_path)
             ImageCache._digital_img = customtkinter.CTkImage(imagem, size=(70, 70))
         return ImageCache._digital_img

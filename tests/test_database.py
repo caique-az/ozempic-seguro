@@ -4,11 +4,13 @@ Testes para DatabaseManager e DatabaseConnection.
 Testa a camada de persistência usando banco SQLite.
 """
 
-import pytest
-import tempfile
-import os
+import contextlib
 import shutil
+import tempfile
+from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 
 class TestDatabaseManager:
@@ -17,17 +19,15 @@ class TestDatabaseManager:
     @pytest.fixture(autouse=True)
     def reset_singleton(self):
         """Reset do singleton antes e depois de cada teste"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
 
         # Limpa antes
         for cls in [DatabaseManager, DatabaseConnection]:
             if hasattr(cls, "_instance"):
                 if cls._instance and hasattr(cls._instance, "conn"):
-                    try:
+                    with contextlib.suppress(Exception):
                         cls._instance.conn.close()
-                    except:
-                        pass
                 cls._instance = None
 
         yield
@@ -36,10 +36,8 @@ class TestDatabaseManager:
         for cls in [DatabaseManager, DatabaseConnection]:
             if hasattr(cls, "_instance"):
                 if cls._instance and hasattr(cls._instance, "conn"):
-                    try:
+                    with contextlib.suppress(Exception):
                         cls._instance.conn.close()
-                    except:
-                        pass
                 cls._instance = None
 
     def test_singleton_pattern(self):
@@ -56,7 +54,7 @@ class TestDatabaseManager:
         from ozempic_seguro.repositories.connection import DatabaseConnection
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             with patch.object(DatabaseConnection, "_get_db_path", return_value=db_path):
                 try:
@@ -77,8 +75,8 @@ class TestDatabaseManager:
 
     def test_execute_query_success(self):
         """Testa execução de query com sucesso"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.user_repository import UserRepository
 
         # Reset singletons
@@ -86,7 +84,7 @@ class TestDatabaseManager:
         DatabaseConnection._instance = None
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             with patch.object(DatabaseConnection, "_get_db_path", return_value=db_path):
                 try:
@@ -112,15 +110,15 @@ class TestDatabaseManager:
 
     def test_fetch_one(self):
         """Testa busca de um registro"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.user_repository import UserRepository
 
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             with patch.object(DatabaseConnection, "_get_db_path", return_value=db_path):
                 try:
@@ -148,15 +146,15 @@ class TestDatabaseManager:
 
     def test_fetch_all(self):
         """Testa busca de múltiplos registros"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.user_repository import UserRepository
 
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             with patch.object(DatabaseConnection, "_get_db_path", return_value=db_path):
                 try:
@@ -187,15 +185,15 @@ class TestDatabaseManager:
 
     def test_transaction_rollback(self):
         """Testa rollback de transação em caso de erro"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.user_repository import UserRepository
 
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             with patch.object(DatabaseConnection, "_get_db_path", return_value=db_path):
                 try:
@@ -228,14 +226,14 @@ class TestDatabaseManagerDeprecatedMethods:
     @pytest.fixture(autouse=True)
     def setup_db(self):
         """Setup do banco para testes"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
 
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
         self.temp_dir = tempfile.mkdtemp()
-        self.db_path = os.path.join(self.temp_dir, "test.db")
+        self.db_path = str(Path(self.temp_dir) / "test.db")
 
         self.patcher = patch.object(DatabaseConnection, "_get_db_path", return_value=self.db_path)
         self.patcher.start()
@@ -246,10 +244,8 @@ class TestDatabaseManagerDeprecatedMethods:
 
         self.patcher.stop()
         if hasattr(self.db, "conn"):
-            try:
+            with contextlib.suppress(Exception):
                 self.db.conn.close()
-            except:
-                pass
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
         shutil.rmtree(self.temp_dir, ignore_errors=True)
@@ -260,7 +256,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.criar_usuario("test_dep", "senha123", "Test User", "vendedor")
+            self.db.criar_usuario("test_dep", "senha123", "Test User", "vendedor")
             deprecation_warnings = [x for x in w if issubclass(x.category, DeprecationWarning)]
             assert len(deprecation_warnings) >= 1
 
@@ -273,7 +269,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.autenticar_usuario("auth_test", "senha123")
+            self.db.autenticar_usuario("auth_test", "senha123")
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -294,7 +290,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_estado_gaveta(1)
+            self.db.get_estado_gaveta(1)
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -304,7 +300,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.set_estado_gaveta(1, True, "administrador", 1)
+            self.db.set_estado_gaveta(1, True, "administrador", 1)
             deprecation_warnings = [x for x in w if issubclass(x.category, DeprecationWarning)]
             assert len(deprecation_warnings) >= 1
 
@@ -314,7 +310,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_historico_gaveta(1)
+            self.db.get_historico_gaveta(1)
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -324,7 +320,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_historico_paginado(1, 0, 10)
+            self.db.get_historico_paginado(1, 0, 10)
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -334,7 +330,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_total_historico(1)
+            self.db.get_total_historico(1)
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -344,7 +340,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_todo_historico()
+            self.db.get_todo_historico()
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -354,7 +350,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_todo_historico_paginado(0, 10)
+            self.db.get_todo_historico_paginado(0, 10)
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -364,7 +360,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_total_todo_historico()
+            self.db.get_total_todo_historico()
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -374,7 +370,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.registrar_auditoria(1, "LOGIN", "usuarios")
+            self.db.registrar_auditoria(1, "LOGIN", "usuarios")
             deprecation_warnings = [x for x in w if issubclass(x.category, DeprecationWarning)]
             assert len(deprecation_warnings) >= 1
 
@@ -384,7 +380,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.buscar_logs_auditoria()
+            self.db.buscar_logs_auditoria()
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -394,7 +390,7 @@ class TestDatabaseManagerDeprecatedMethods:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.contar_logs_auditoria()
+            self.db.contar_logs_auditoria()
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
 
@@ -424,14 +420,14 @@ class TestDatabaseManagerAdditional:
     @pytest.fixture(autouse=True)
     def setup_db(self):
         """Setup do banco para testes"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
 
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
         self.temp_dir = tempfile.mkdtemp()
-        self.db_path = os.path.join(self.temp_dir, "test.db")
+        self.db_path = str(Path(self.temp_dir) / "test.db")
 
         self.patcher = patch.object(DatabaseConnection, "_get_db_path", return_value=self.db_path)
         self.patcher.start()
@@ -442,10 +438,8 @@ class TestDatabaseManagerAdditional:
 
         self.patcher.stop()
         if hasattr(self.db, "conn"):
-            try:
+            with contextlib.suppress(Exception):
                 self.db.conn.close()
-            except:
-                pass
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
         shutil.rmtree(self.temp_dir, ignore_errors=True)
@@ -471,7 +465,7 @@ class TestDatabaseManagerAdditional:
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = self.db.get_drawer_history(1)
+            self.db.get_drawer_history(1)
             if len(w) > 0:
                 assert issubclass(w[-1].category, DeprecationWarning)
 

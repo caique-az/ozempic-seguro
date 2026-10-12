@@ -87,6 +87,9 @@ ignore = [
     "B026",   # star-arg after keyword arg (unavoidable in CustomTkinter super().__init__)
 ]
 
+# Emoji used as icons in the UI
+allowed-confusables = ["ℹ", "➕"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["T20"]
 "scripts/**" = ["T20"]
@@ -107,6 +110,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

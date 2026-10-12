@@ -4,13 +4,15 @@ Gerenciador de conexão com banco de dados.
 Responsabilidade única: gerenciar conexão SQLite e executar migrations.
 """
 
-import os
 import sqlite3
 import threading
+from pathlib import Path
 from typing import Optional
 
 from ..config import Config
-from ..core.logger import DatabaseException, log_exceptions, logger
+from ..core.exceptions import MigrationError
+from ..core.logger import log_exceptions, logger
+from ..paths import DATA_DIR, MIGRATIONS_DIR
 
 
 class DatabaseConnection:
@@ -56,7 +58,7 @@ class DatabaseConnection:
         logger.info("Initializing database connection")
 
         db_path = self._get_db_path()
-        self._is_new_db = not os.path.exists(db_path)
+        self._is_new_db = not Path(db_path).exists()
 
         self._conn = sqlite3.connect(
             db_path,
@@ -73,10 +75,8 @@ class DatabaseConnection:
 
     def _get_db_path(self) -> str:
         """Retorna caminho do arquivo do banco"""
-        base_dir = os.path.dirname(os.path.dirname(__file__))
-        data_dir = os.path.join(base_dir, Config.App.DATA_DIR)
-        os.makedirs(data_dir, exist_ok=True)
-        return os.path.join(data_dir, Config.Database.DB_NAME)
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        return str(DATA_DIR / Config.Database.DB_NAME)
 
     def _configure_pragmas(self) -> None:
         """Configura pragmas de performance"""
@@ -90,9 +90,6 @@ class DatabaseConnection:
     @log_exceptions("Database Migrations")
     def _run_migrations(self) -> None:
         """Executa scripts SQL de migrations"""
-        base_dir = os.path.dirname(os.path.dirname(__file__))
-        migrations_dir = os.path.join(base_dir, Config.App.MIGRATIONS_DIR)
-        os.makedirs(migrations_dir, exist_ok=True)
 
         # Cria tabela de controle
         self._cursor.execute(
@@ -110,22 +107,18 @@ class DatabaseConnection:
         applied = {row[0] for row in self._cursor.execute("SELECT version FROM migrations")}
 
         # Aplica novos scripts
-        if not os.path.exists(migrations_dir):
+        if not MIGRATIONS_DIR.exists():
             return
 
-        migration_files = sorted([f for f in os.listdir(migrations_dir) if f.endswith(".sql")])
-
-        for fname in migration_files:
+        for path in sorted(MIGRATIONS_DIR.glob("*.sql")):
+            fname = path.name
             version = int(fname.split("_")[0])
             if version in applied:
                 continue
 
             logger.info(f"Applying migration: {fname}")
-            path = os.path.join(migrations_dir, fname)
-
             try:
-                with open(path, encoding="utf-8") as f:
-                    self._conn.executescript(f.read())
+                self._conn.executescript(path.read_text(encoding="utf-8"))
                 self._cursor.execute(
                     "INSERT INTO migrations (version, name) VALUES (?, ?)", (version, fname)
                 )
@@ -133,7 +126,7 @@ class DatabaseConnection:
                 logger.info(f"Migration applied: {fname}")
             except Exception as e:
                 logger.error(f"Migration failed {fname}: {e}")
-                raise DatabaseException(f"Migration failed: {fname}")
+                raise MigrationError(fname, str(e)) from e
 
     @property
     def conn(self) -> sqlite3.Connection:

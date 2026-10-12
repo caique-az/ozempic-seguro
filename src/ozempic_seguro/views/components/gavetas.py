@@ -2,12 +2,12 @@
 Drawer components: GavetaButton, GavetaButtonGrid
 """
 
-import os
 from tkinter import messagebox
 
 import customtkinter
 from PIL import Image
 
+from ...paths import ASSETS_DIR
 from ...services.auth_service import get_auth_service
 from ...services.gaveta_service import GavetaService
 from ...services.timer_control_service import get_timer_control_service
@@ -17,21 +17,12 @@ from ...services.timer_control_service import get_timer_control_service
 class _GavetaImageCache:
     _gaveta_aberta = None
     _gaveta_fechada = None
-    _assets_path = None
-
-    @classmethod
-    def _get_assets_path(cls):
-        if cls._assets_path is None:
-            cls._assets_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), "..", "..", "assets")
-            )
-        return cls._assets_path
 
     @classmethod
     def get_gaveta_aberta(cls):
         if cls._gaveta_aberta is None:
             cls._gaveta_aberta = customtkinter.CTkImage(
-                Image.open(os.path.join(cls._get_assets_path(), "gaveta.png")), size=(120, 120)
+                Image.open(ASSETS_DIR / "gaveta.png"), size=(120, 120)
             )
         return cls._gaveta_aberta
 
@@ -39,7 +30,7 @@ class _GavetaImageCache:
     def get_gaveta_fechada(cls):
         if cls._gaveta_fechada is None:
             cls._gaveta_fechada = customtkinter.CTkImage(
-                Image.open(os.path.join(cls._get_assets_path(), "gaveta_black.png")),
+                Image.open(ASSETS_DIR / "gaveta_black.png"),
                 size=(120, 120),
             )
         return cls._gaveta_fechada

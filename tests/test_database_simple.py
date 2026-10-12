@@ -3,10 +3,11 @@ Testes simplificados para o DatabaseManager.
 Evita problemas com singleton e locks de arquivo.
 """
 
-import pytest
-import tempfile
-import os
 import sqlite3
+import tempfile
+from pathlib import Path
+
+import pytest
 
 
 class TestDatabaseSimple:
@@ -15,7 +16,7 @@ class TestDatabaseSimple:
     def test_sqlite_connection(self):
         """Testa conexão básica com SQLite"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             # Cria conexão
             conn = sqlite3.connect(db_path)
@@ -47,7 +48,7 @@ class TestDatabaseSimple:
     def test_user_table_structure(self):
         """Testa estrutura da tabela de usuários"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
@@ -78,7 +79,7 @@ class TestDatabaseSimple:
     def test_unique_constraint(self):
         """Testa constraint de unicidade"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
@@ -100,14 +101,13 @@ class TestDatabaseSimple:
             # Segundo insert com mesmo username deve falhar
             with pytest.raises(sqlite3.IntegrityError):
                 cursor.execute("INSERT INTO usuarios (username) VALUES (?)", ("user1",))
-                conn.commit()
 
             conn.close()
 
     def test_transaction_rollback(self):
         """Testa rollback de transação"""
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = os.path.join(temp_dir, "test.db")
+            db_path = str(Path(temp_dir) / "test.db")
 
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()

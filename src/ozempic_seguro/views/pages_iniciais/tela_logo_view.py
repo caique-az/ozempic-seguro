@@ -1,7 +1,7 @@
-import os
-
 import customtkinter
 from PIL import Image
+
+from ...paths import ASSETS_DIR
 
 # Cache de imagem para evitar recarregamento
 _logo_img_cache = None
@@ -10,9 +10,7 @@ _logo_img_cache = None
 def _get_logo_image():
     global _logo_img_cache
     if _logo_img_cache is None:
-        img_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "assets", "logo.jpg")
-        )
+        img_path = ASSETS_DIR / "logo.jpg"
         _logo_img_cache = customtkinter.CTkImage(Image.open(img_path), size=(300, 300))
     return _logo_img_cache
 

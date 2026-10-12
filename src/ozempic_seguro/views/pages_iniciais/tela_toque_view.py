@@ -1,7 +1,7 @@
-import os
-
 import customtkinter
 from PIL import Image
+
+from ...paths import ASSETS_DIR
 
 # Cache de imagem para evitar recarregamento
 _dedo_img_cache = None
@@ -10,9 +10,7 @@ _dedo_img_cache = None
 def _get_dedo_image():
     global _dedo_img_cache
     if _dedo_img_cache is None:
-        img_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "assets", "dedo.png")
-        )
+        img_path = ASSETS_DIR / "dedo.png"
         _dedo_img_cache = customtkinter.CTkImage(Image.open(img_path), size=(300, 300))
     return _dedo_img_cache
 

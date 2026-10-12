@@ -1,25 +1,19 @@
-import pytest
-import tempfile
-import os
 from unittest.mock import Mock, patch
-import sys
 
-# Adicionar src ao path para importar módulos
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+import pytest
 
 from ozempic_seguro.repositories.database import DatabaseManager
-from ozempic_seguro.services.user_service import UserService
 from ozempic_seguro.services.audit_service import AuditService
+from ozempic_seguro.services.user_service import UserService
 from ozempic_seguro.session.session_manager import SessionManager
 
 
 @pytest.fixture
-def temp_db():
+def temp_db(tmp_path):
     """Cria um banco de dados temporário isolado para testes"""
     from ozempic_seguro.repositories.connection import DatabaseConnection
 
-    temp_dir = tempfile.mkdtemp()
-    db_path = os.path.join(temp_dir, "test_ozempic.db")
+    db_path = str(tmp_path / "test_ozempic.db")
 
     # Reset singletons antes de criar novo
     DatabaseManager._instance = None
@@ -39,19 +33,6 @@ def temp_db():
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 
-    # Cleanup
-    try:
-        if os.path.exists(db_path):
-            os.remove(db_path)
-        # Remove arquivos WAL se existirem
-        for ext in ["-wal", "-shm"]:
-            wal_path = db_path + ext
-            if os.path.exists(wal_path):
-                os.remove(wal_path)
-        os.rmdir(temp_dir)
-    except OSError:
-        pass  # Ignora erros de cleanup
-
 
 @pytest.fixture
 def mock_db():
@@ -68,8 +49,7 @@ def user_service(temp_db):
     """Fixture para UserService com DB temporário"""
     with patch("ozempic_seguro.services.user_service.DatabaseManager") as mock_db_class:
         mock_db_class.return_value = temp_db
-        service = UserService()
-        return service
+        return UserService()
 
 
 @pytest.fixture
@@ -77,8 +57,7 @@ def audit_service(temp_db):
     """Fixture para AuditService com DB temporário"""
     with patch("ozempic_seguro.services.audit_service.DatabaseManager") as mock_db_class:
         mock_db_class.return_value = temp_db
-        service = AuditService()
-        return service
+        return AuditService()
 
 
 @pytest.fixture
@@ -142,8 +121,8 @@ def mock_datetime():
 @pytest.fixture(autouse=True)
 def reset_singletons():
     """Reset de todos os singletons antes de cada teste para isolamento"""
-    from ozempic_seguro.services.service_factory import _registry
     from ozempic_seguro.repositories.connection import DatabaseConnection
+    from ozempic_seguro.services.service_factory import _registry
 
     # Reset registry
     _registry.reset_services()
@@ -170,7 +149,9 @@ def reset_singletons():
 @pytest.fixture
 def mock_customtkinter():
     """Mock do CustomTkinter para testes de UI"""
-    with patch("customtkinter.CTk") as mock_ctk:
-        with patch("customtkinter.CTkFrame") as mock_frame:
-            with patch("customtkinter.CTkButton") as mock_button:
-                yield {"CTk": mock_ctk, "CTkFrame": mock_frame, "CTkButton": mock_button}
+    with (
+        patch("customtkinter.CTk") as mock_ctk,
+        patch("customtkinter.CTkFrame") as mock_frame,
+        patch("customtkinter.CTkButton") as mock_button,
+    ):
+        yield {"CTk": mock_ctk, "CTkFrame": mock_frame, "CTkButton": mock_button}

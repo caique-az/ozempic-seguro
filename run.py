@@ -5,10 +5,10 @@ Execute este arquivo para iniciar a aplicação.
 """
 
 import sys
-import os
+from pathlib import Path
 
 # Adiciona o diretório src ao path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 # Importa e executa o main
 from ozempic_seguro.main import main

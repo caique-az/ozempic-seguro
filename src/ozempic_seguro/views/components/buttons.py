@@ -2,17 +2,19 @@
 Componentes de botões: ModernButton, VoltarButton, FinalizarSessaoButton
 """
 
-import os
+from typing import Any, ClassVar
 
 import customtkinter
 from PIL import Image
+
+from ...paths import ASSETS_DIR
 
 
 class ModernButton(customtkinter.CTkButton):
     """Componente de botão moderno com feedback visual aprimorado"""
 
     # Estilos predefinidos
-    STYLES = {
+    STYLES: ClassVar[dict[str, dict[str, Any]]] = {
         "primary": {
             "fg_color": "#2E86C1",
             "hover_color": "#1F618D",
@@ -91,9 +93,7 @@ class VoltarButton:
         self.frame = customtkinter.CTkFrame(master, fg_color="transparent")
         self.frame.place(relx=0.5, rely=0.88, anchor="center")
 
-        voltar_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "assets", "botao_voltar.png")
-        )
+        voltar_path = ASSETS_DIR / "botao_voltar.png"
 
         self.elipse_img = customtkinter.CTkImage(Image.open(voltar_path), size=(40, 40))
 
@@ -117,9 +117,7 @@ class FinalizarSessaoButton:
         self.frame = customtkinter.CTkFrame(master, fg_color="transparent")
         self.frame.place(relx=0.5, rely=0.88, anchor="center")
 
-        elipse_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "assets", "elipse.png")
-        )
+        elipse_path = ASSETS_DIR / "elipse.png"
 
         self.elipse_img = customtkinter.CTkImage(Image.open(elipse_path), size=(40, 40))
 

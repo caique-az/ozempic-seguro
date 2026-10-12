@@ -3,11 +3,12 @@ Sistema de logging estruturado para toda a aplicação
 """
 
 import logging
-import os
 import sys
 from datetime import datetime
 from functools import wraps
 from typing import Any
+
+from ..paths import LOGS_DIR
 
 
 class AppLogger:
@@ -18,17 +19,15 @@ class AppLogger:
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(AppLogger, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
             cls._instance._setup_logger()
         return cls._instance
 
     def _setup_logger(self):
         """Configura o logger principal"""
         # Criar diretório de logs na raiz do projeto (não em src/)
-        log_dir = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "logs"
-        )
-        os.makedirs(log_dir, exist_ok=True)
+        log_dir = LOGS_DIR
+        log_dir.mkdir(parents=True, exist_ok=True)
 
         # Configurar logger
         self._logger = logging.getLogger("ozempic_seguro")
@@ -37,7 +36,7 @@ class AppLogger:
         # Evitar duplicação de handlers
         if not self._logger.handlers:
             # Handler para arquivo
-            log_file = os.path.join(log_dir, f'app_{datetime.now().strftime("%Y%m%d")}.log')
+            log_file = log_dir / f"app_{datetime.now().strftime('%Y%m%d')}.log"
             file_handler = logging.FileHandler(log_file, encoding="utf-8")
             file_handler.setLevel(logging.INFO)
 
@@ -117,7 +116,7 @@ def log_exceptions(operation_name: str = "Unknown Operation"):
                 return func(*args, **kwargs)
             except Exception as e:
                 logger.error(
-                    f"Exception in {operation_name} ({func.__name__}): {str(e)}",
+                    f"Exception in {operation_name} ({func.__name__}): {e!s}",
                     extra={
                         "function": func.__name__,
                         "operation": operation_name,
@@ -158,20 +157,10 @@ def log_method_call(include_args: bool = False):
                 return result
             except Exception as e:
                 logger.error(
-                    f"Method failed: {class_name}.{func.__name__}: {str(e)}", extra=extra_context
+                    f"Method failed: {class_name}.{func.__name__}: {e!s}", extra=extra_context
                 )
                 raise
 
         return wrapper
 
     return decorator
-
-
-# Exceções movidas para core/exceptions.py
-# Imports mantidos para compatibilidade
-
-
-class DatabaseException(Exception):
-    """Exceção para erros de banco de dados (compatibilidade)"""
-
-    pass
