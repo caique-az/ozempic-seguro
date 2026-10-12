@@ -73,20 +73,20 @@ class TestUserServiceValidation:
         """Testa criação com dados inválidos"""
         with pytest.raises(InvalidUserDataError):
             self.service.create_user(
-                nome="",  # Nome vazio
+                name="",  # Nome vazio
                 username="",  # Username vazio
-                senha="",  # Senha vazia
-                tipo="invalid",  # Tipo inválido
+                password="",  # Senha vazia
+                user_type="invalid",  # Tipo inválido
             )
 
     def test_create_user_weak_password(self):
         """Testa criação com senha fraca"""
         with pytest.raises((InvalidUserDataError, WeakPasswordError)):
             self.service.create_user(
-                nome="Test User",
+                name="Test User",
                 username="testuser_weak",
-                senha="123",  # Senha muito curta
-                tipo="vendedor",
+                password="123",  # Senha muito curta
+                user_type="vendedor",
             )
 
     def test_create_user_valid(self):
@@ -97,7 +97,7 @@ class TestUserServiceValidation:
 
         # Criação deve funcionar
         success, msg = self.service.create_user(
-            nome="Test User Valid", username=unique_username, senha="ValidPass123!", tipo="vendedor"
+            name="Test User Valid", username=unique_username, password="ValidPass123!", user_type="vendedor"
         )
 
         assert success is True

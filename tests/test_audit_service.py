@@ -87,7 +87,7 @@ class TestAuditServiceFilters:
 
     def test_get_logs_by_action(self):
         """Testa obtenção de logs por ação"""
-        logs = self.service.get_logs(filtro_action="LOGIN")
+        logs = self.service.get_logs(action_filter="LOGIN")
         assert isinstance(logs, list)
 
     def test_get_logs_by_table(self):
@@ -102,7 +102,7 @@ class TestAuditServiceFilters:
 
     def test_count_logs_with_filter(self):
         """Testa contagem de logs com filtro"""
-        count = self.service.count_logs(filtro_action="LOGIN")
+        count = self.service.count_logs(action_filter="LOGIN")
         assert isinstance(count, int)
 
     def test_get_logs_empty_filter(self):

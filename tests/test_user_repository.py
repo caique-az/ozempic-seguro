@@ -23,9 +23,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="TestPassword123",
-            nome_completo="Test User",
-            tipo="vendedor",
+            password="TestPassword123",
+            full_name="Test User",
+            user_type="vendedor",
         )
 
         assert user_id is not None
@@ -43,17 +43,17 @@ class TestUserRepository:
         # Criar primeiro usuário
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="TestPassword123",
-            nome_completo="Test User",
-            tipo="vendedor",
+            password="TestPassword123",
+            full_name="Test User",
+            user_type="vendedor",
         )
 
         # Tentar criar com mesmo username
         duplicate_id = self.repo.create_user(
             username=unique_username,
-            senha="AnotherPassword123",
-            nome_completo="Another User",
-            tipo="repositor",
+            password="AnotherPassword123",
+            full_name="Another User",
+            user_type="repositor",
         )
 
         assert duplicate_id is None
@@ -71,9 +71,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha=password,
-            nome_completo="Auth Test User",
-            tipo="vendedor",
+            password=password,
+            full_name="Auth Test User",
+            user_type="vendedor",
         )
 
         # Autenticar
@@ -95,9 +95,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="CorrectPassword123",
-            nome_completo="Test User",
-            tipo="vendedor",
+            password="CorrectPassword123",
+            full_name="Test User",
+            user_type="vendedor",
         )
 
         # Tentar autenticar com senha errada
@@ -121,9 +121,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="TestPassword123",
-            nome_completo="Get By ID User",
-            tipo="repositor",
+            password="TestPassword123",
+            full_name="Get By ID User",
+            user_type="repositor",
         )
 
         user = self.repo.get_user_by_id(user_id)
@@ -158,9 +158,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha=old_password,
-            nome_completo="Update Password User",
-            tipo="vendedor",
+            password=old_password,
+            full_name="Update Password User",
+            user_type="vendedor",
         )
 
         # Atualizar senha
@@ -186,9 +186,9 @@ class TestUserRepository:
 
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="TestPassword123",
-            nome_completo="Delete User",
-            tipo="vendedor",
+            password="TestPassword123",
+            full_name="Delete User",
+            user_type="vendedor",
         )
 
         # Deletar
@@ -218,9 +218,9 @@ class TestUserRepository:
         # Criar segundo admin
         user_id = self.repo.create_user(
             username=unique_username,
-            senha="AdminPassword123",
-            nome_completo="Second Admin",
-            tipo="administrador",
+            password="AdminPassword123",
+            full_name="Second Admin",
+            user_type="administrador",
         )
 
         # Agora nenhum admin é único
@@ -275,9 +275,9 @@ class TestUserRepositoryEdgeCases:
             unique_username = f"type_{tipo}_{uuid.uuid4().hex[:6]}"
             user_id = self.repo.create_user(
                 username=unique_username,
-                senha="TestPassword123",
-                nome_completo=f"Test {tipo}",
-                tipo=tipo,
+                password="TestPassword123",
+                full_name=f"Test {tipo}",
+                user_type=tipo,
             )
             assert user_id is not None
             self.repo.delete_user(user_id)

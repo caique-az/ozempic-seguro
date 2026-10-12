@@ -48,7 +48,7 @@ class TestUserServiceCreateUser:
         unique_username = f"test_{uuid.uuid4().hex[:8]}"
 
         success, msg = self.service.create_user(
-            nome="Test User", username=unique_username, senha="ValidPass123!", tipo="vendedor"
+            name="Test User", username=unique_username, password="ValidPass123!", user_type="vendedor"
         )
 
         assert success is True
@@ -57,24 +57,24 @@ class TestUserServiceCreateUser:
         """Testa criação com username vazio"""
         with pytest.raises(InvalidUserDataError):
             self.service.create_user(
-                nome="Test User", username="", senha="ValidPass123!", tipo="vendedor"
+                name="Test User", username="", password="ValidPass123!", user_type="vendedor"
             )
 
     def test_create_user_empty_password(self):
         """Testa criação com senha vazia"""
         with pytest.raises((InvalidUserDataError, WeakPasswordError)):
             self.service.create_user(
-                nome="Test User", username=f"test_{uuid.uuid4().hex[:8]}", senha="", tipo="vendedor"
+                name="Test User", username=f"test_{uuid.uuid4().hex[:8]}", password="", user_type="vendedor"
             )
 
     def test_create_user_invalid_type(self):
         """Testa criação com tipo inválido"""
         with pytest.raises(InvalidUserDataError):
             self.service.create_user(
-                nome="Test User",
+                name="Test User",
                 username=f"test_{uuid.uuid4().hex[:8]}",
-                senha="ValidPass123!",
-                tipo="invalid_type",
+                password="ValidPass123!",
+                user_type="invalid_type",
             )
 
 

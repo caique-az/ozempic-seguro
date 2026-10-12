@@ -60,7 +60,7 @@ class TestUserRegistrationService:
             name="A" * 30,  # Mais de 26 caracteres
             username="12345678",
             password="1234",
-            tipo="vendedor",
+            user_type="vendedor",
         )
 
         assert result.success is False

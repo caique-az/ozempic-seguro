@@ -170,13 +170,13 @@ class DatabaseManager:
         """DEPRECATED: Use AuditRepository.create_log()"""
         _warn("registrar_auditoria", "AuditRepository.create_log()")
         return self._audit.create_log(
-            usuario_id=usuario_id,
-            acao=acao,
-            tabela_afetada=tabela_afetada,
+            user_id=usuario_id,
+            action=acao,
+            affected_table=tabela_afetada,
             id_afetado=id_afetado,
-            dados_anteriores=dados_anteriores,
-            dados_novos=dados_novos,
-            endereco_ip=endereco_ip,
+            previous_data=dados_anteriores,
+            new_data=dados_novos,
+            ip_address=endereco_ip,
         )
 
     def buscar_logs_auditoria(
@@ -194,11 +194,11 @@ class DatabaseManager:
         return self._audit.get_logs(
             offset=offset,
             limit=limit,
-            filtro_usuario=filtro_usuario,
-            filtro_acao=filtro_acao,
-            filtro_tabela=filtro_tabela,
-            data_inicio=data_inicio,
-            data_fim=data_fim,
+            user_filter=filtro_usuario,
+            action_filter=filtro_acao,
+            table_filter=filtro_tabela,
+            start_date=data_inicio,
+            end_date=data_fim,
         )
 
     def contar_logs_auditoria(
@@ -212,11 +212,11 @@ class DatabaseManager:
         """DEPRECATED: Use AuditRepository.count_logs()"""
         _warn("contar_logs_auditoria", "AuditRepository.count_logs()")
         return self._audit.count_logs(
-            filtro_usuario=filtro_usuario,
-            filtro_acao=filtro_acao,
-            filtro_tabela=filtro_tabela,
-            data_inicio=data_inicio,
-            data_fim=data_fim,
+            user_filter=filtro_usuario,
+            action_filter=filtro_acao,
+            table_filter=filtro_tabela,
+            start_date=data_inicio,
+            end_date=data_fim,
         )
 
     # =========================================================================

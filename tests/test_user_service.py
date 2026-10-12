@@ -81,7 +81,7 @@ class TestUserService:
         mock_user_repo.create_user.return_value = True
 
         result, msg = user_service_with_mocks.create_user(
-            nome="New User", username="newuser", senha="Password1", tipo="vendedor"
+            name="New User", username="newuser", password="Password1", user_type="vendedor"
         )
 
         assert result is True
@@ -89,7 +89,7 @@ class TestUserService:
     def test_create_user_invalid_input(self, user_service_with_mocks):
         """Testa falha na criação com dados inválidos - deve lançar InvalidUserDataError"""
         with pytest.raises(InvalidUserDataError):
-            user_service_with_mocks.create_user(nome="", username="u", senha="123", tipo="invalido")
+            user_service_with_mocks.create_user(name="", username="u", password="123", user_type="invalido")
 
     def test_get_all_users(self, user_service_with_mocks, mock_user_repo):
         """Testa listagem de todos os usuários"""
@@ -159,7 +159,7 @@ class TestUserService:
 
         for tipo in ["vendedor", "repositor", "administrador"]:
             result, msg = user_service_with_mocks.create_user(
-                nome="Test User", username=f"testuser_{tipo}", senha="Password1", tipo=tipo
+                name="Test User", username=f"testuser_{tipo}", password="Password1", user_type=tipo
             )
             assert result is True
 

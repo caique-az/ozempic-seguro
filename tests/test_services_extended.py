@@ -141,7 +141,7 @@ class TestAuditViewServiceExtended:
 
     def test_get_logs_with_todas_filter(self):
         """Testa logs com filtro 'Todas'"""
-        filter = AuditFilter(acao="Todas")
+        filter = AuditFilter(action="Todas")
         result = self.service.get_logs(filter=filter)
         assert isinstance(result.items, list)
 
@@ -167,19 +167,19 @@ class TestDataclassProperties:
         """Testa todas as propriedades de UserData"""
         user = UserData(1, "123", "Test User", "vendedor", True, "2025-01-01 10:00:00")
 
-        assert user.is_tecnico is False
+        assert user.is_technician is False
         assert user.is_admin is False
         assert user.can_be_modified is True
         assert user.can_be_deleted is True
-        assert user.tipo_display == "Vendedor"
+        assert user.user_type_display == "Vendedor"
         assert user.status_display == "Ativo"
-        assert "2025-01-01" in user.data_criacao_display
+        assert "2025-01-01" in user.created_at_display
 
     def test_user_data_tecnico(self):
         """Testa UserData para técnico"""
         user = UserData(1, "123", "Tech User", "tecnico", True, "2025-01-01")
 
-        assert user.is_tecnico is True
+        assert user.is_technician is True
         assert user.can_be_modified is False
         assert user.can_be_deleted is False
 
@@ -192,8 +192,8 @@ class TestDataclassProperties:
 
     def test_drawer_state_properties(self):
         """Testa propriedades de DrawerState"""
-        state_open = DrawerState(numero=1, esta_aberta=True)
-        state_closed = DrawerState(numero=2, esta_aberta=False)
+        state_open = DrawerState(numero=1, is_open=True)
+        state_closed = DrawerState(numero=2, is_open=False)
 
         assert state_open.status_display == "Aberta"
         assert state_closed.status_display == "Fechada"

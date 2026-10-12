@@ -61,7 +61,7 @@ class TestAuditRepository:
         # Criar log específico
         self.repo.create_log(user_id=1, action="FILTERED_ACTION", affected_table="FILTERED_TABLE")
 
-        logs = self.repo.get_logs(offset=0, limit=10, filtro_action="FILTERED_ACTION")
+        logs = self.repo.get_logs(offset=0, limit=10, action_filter="FILTERED_ACTION")
 
         assert isinstance(logs, list)
         # Todos os logs retornados devem ter a ação filtrada
@@ -81,7 +81,7 @@ class TestAuditRepository:
         unique_action = f"COUNT_TEST_{datetime.now().timestamp()}"
         self.repo.create_log(user_id=1, action=unique_action, affected_table="TEST")
 
-        count = self.repo.count_logs(filtro_action=unique_action)
+        count = self.repo.count_logs(action_filter=unique_action)
 
         assert count >= 1
 

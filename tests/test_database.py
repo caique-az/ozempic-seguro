@@ -95,9 +95,9 @@ class TestDatabaseManager:
                     # Inserir usuário de teste usando UserRepository
                     result = user_repo.create_user(
                         username="test_user",
-                        senha="senha123",
-                        nome_completo="Test User",
-                        tipo="vendedor",
+                        password="senha123",
+                        full_name="Test User",
+                        user_type="vendedor",
                     )
 
                     # create_user retorna o ID do usuário ou None
@@ -129,9 +129,9 @@ class TestDatabaseManager:
                     # Inserir usuário usando UserRepository
                     user_repo.create_user(
                         username="test_user",
-                        senha="senha123",
-                        nome_completo="Test User",
-                        tipo="vendedor",
+                        password="senha123",
+                        full_name="Test User",
+                        user_type="vendedor",
                     )
 
                     # Buscar usuário usando cursor
