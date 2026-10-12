@@ -26,7 +26,7 @@ class ValidationRule:
                 return True, None
             return False, self.error_message
         except Exception as e:
-            return False, f"Erro na validação: {str(e)}"
+            return False, f"Erro na validação: {e!s}"
 
 
 class UserType(Enum):
@@ -64,7 +64,7 @@ class Validators:
     TIME_PATTERN = re.compile(r"^\d{2}:\d{2}(:\d{2})?$")
 
     # Caracteres perigosos para SQL/XSS
-    DANGEROUS_PATTERNS = [
+    DANGEROUS_PATTERNS = (
         r"<script[^>]*>.*?</script>",  # Scripts
         r"javascript:",  # JavaScript URLs
         r"on\w+\s*=",  # Event handlers
@@ -72,7 +72,7 @@ class Validators:
         r"/\*.*?\*/",  # SQL block comments
         r"\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b",  # SQL commands
         r"xp_|sp_",  # SQL Server procedures
-    ]
+    )
 
     @classmethod
     def validate_username(cls, username: str) -> ValidationResult:

@@ -9,7 +9,7 @@ from .session_manager import SessionManager
 from .timer_manager import TimerManager
 
 __all__ = [
-    "SessionManager",
     "LoginAttemptsManager",
+    "SessionManager",
     "TimerManager",
 ]

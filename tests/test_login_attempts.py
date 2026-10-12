@@ -2,12 +2,13 @@
 Testes para LoginAttemptsManager - Controle de tentativas de login.
 """
 
-import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from ozempic_seguro.session.login_attempts import LoginAttemptsManager
+import pytest
+
 from ozempic_seguro.config import Config
+from ozempic_seguro.session.login_attempts import LoginAttemptsManager
 
 
 class TestLoginAttemptsManager:
@@ -17,7 +18,7 @@ class TestLoginAttemptsManager:
     def setup(self):
         """Setup para cada teste"""
         self.manager = LoginAttemptsManager()
-        yield
+        return
 
     def test_initial_attempts_count(self):
         """Testa que usuário novo tem todas as tentativas disponíveis"""
@@ -162,7 +163,7 @@ class TestLoginAttemptsManagerEdgeCases:
     def setup(self):
         """Setup para cada teste"""
         self.manager = LoginAttemptsManager()
-        yield
+        return
 
     def test_empty_username(self):
         """Testa comportamento com username vazio"""

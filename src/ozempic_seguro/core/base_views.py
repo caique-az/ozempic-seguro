@@ -48,7 +48,7 @@ class BaseView(customtkinter.CTkFrame, ABC):
             logger.debug(f"Destroying view: {self.__class__.__name__}")
             self.destroy()
         except Exception as e:
-            logger.error(f"Error destroying view {self.__class__.__name__}: {str(e)}")
+            logger.error(f"Error destroying view {self.__class__.__name__}: {e!s}")
 
 
 class AdminView(BaseView):
@@ -193,7 +193,7 @@ class BaseService(ABC):
             self._logger.info(f"Operation completed successfully: {operation_name}")
             return result
         except Exception as e:
-            self._logger.error(f"Operation failed: {operation_name} - {str(e)}")
+            self._logger.error(f"Operation failed: {operation_name} - {e!s}")
             raise
 
 
@@ -242,11 +242,11 @@ class BaseRepository(ABC):
             self._logger.debug(f"Query executed successfully: {query_name}")
             return result
         except Exception as e:
-            self._logger.error(f"Query failed: {query_name} - {str(e)}")
+            self._logger.error(f"Query failed: {query_name} - {e!s}")
             raise
 
 
-class ConfigurableComponent(ABC):
+class ConfigurableComponent:
     """Classe base para componentes configuráveis"""
 
     def __init__(self, config_section: str | None = None):
@@ -272,7 +272,7 @@ class ConfigurableComponent(ABC):
                     return getattr(section, key, default)
             return default
         except Exception as e:
-            self._logger.warning(f"Failed to get config value {key}: {str(e)}")
+            self._logger.warning(f"Failed to get config value {key}: {e!s}")
             return default
 
     def apply_theme_config(self, widget: customtkinter.CTkBaseClass) -> None:
@@ -285,7 +285,7 @@ class ConfigurableComponent(ABC):
             if hasattr(widget, "configure"):
                 widget.configure(fg_color=self.get_config_value("THEME_COLOR", "#3B6A7D"))
         except Exception as e:
-            self._logger.debug(f"Could not apply theme config: {str(e)}")
+            self._logger.debug(f"Could not apply theme config: {e!s}")
 
 
 # Mixin para funcionalidades comuns
@@ -308,7 +308,7 @@ class ValidatedMixin:
             )
             return bool(result["valid"])
         except Exception as e:
-            logger.error(f"Validation error: {str(e)}")
+            logger.error(f"Validation error: {e!s}")
             return False
 
 
@@ -331,4 +331,4 @@ class AuditedMixin:
         try:
             self.security_logger.log_user_action(action, context or {})
         except Exception as e:
-            logger.error(f"Failed to log user action: {str(e)}")
+            logger.error(f"Failed to log user action: {e!s}")

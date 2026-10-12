@@ -2,11 +2,12 @@
 Testes para DatabaseConnection - Gerenciamento de conexão com banco.
 """
 
-import pytest
 import sqlite3
 
-from ozempic_seguro.repositories.connection import DatabaseConnection
+import pytest
+
 from ozempic_seguro.config import Config
+from ozempic_seguro.repositories.connection import DatabaseConnection
 
 
 class TestDatabaseConnection:
@@ -37,7 +38,7 @@ class TestDatabaseConnection:
         """Testa execução de query"""
         db = DatabaseConnection.get_instance()
 
-        result = db.execute("SELECT 1 as test")
+        db.execute("SELECT 1 as test")
         row = db.fetchone()
 
         assert row is not None
@@ -47,7 +48,7 @@ class TestDatabaseConnection:
         """Testa execução de query com parâmetros"""
         db = DatabaseConnection.get_instance()
 
-        result = db.execute("SELECT ? as value", (42,))
+        db.execute("SELECT ? as value", (42,))
         row = db.fetchone()
 
         assert row["value"] == 42
@@ -75,7 +76,7 @@ class TestDatabaseConnection:
 
         # Verificar que não foi inserido
         db.execute("SELECT COUNT(*) as count FROM test_temp")
-        row = db.fetchone()
+        db.fetchone()
 
         # Limpar
         db.execute("DROP TABLE IF EXISTS test_temp")

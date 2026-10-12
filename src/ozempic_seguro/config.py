@@ -31,7 +31,7 @@ class SecurityConfig:
     MAX_NAME_LENGTH = 100
 
     # Lista de tipos de usuário válidos
-    VALID_USER_TYPES = ["administrador", "vendedor", "repositor", "tecnico"]
+    VALID_USER_TYPES = ("administrador", "vendedor", "repositor", "tecnico")
 
     # Configurações de auditoria
     ENABLE_DETAILED_LOGGING = True
@@ -281,9 +281,8 @@ class EnvironmentConfig:
                 "detailed_logging": True,
                 "session_timeout": 60,  # 1 hora em dev
             }
-        else:
-            return {
-                "log_level": "INFO",
-                "detailed_logging": SecurityConfig.ENABLE_DETAILED_LOGGING,
-                "session_timeout": SecurityConfig.SESSION_TIMEOUT_MINUTES,
-            }
+        return {
+            "log_level": "INFO",
+            "detailed_logging": SecurityConfig.ENABLE_DETAILED_LOGGING,
+            "session_timeout": SecurityConfig.SESSION_TIMEOUT_MINUTES,
+        }

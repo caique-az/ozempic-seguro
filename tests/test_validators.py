@@ -2,7 +2,7 @@
 Testes para o sistema centralizado de validação.
 """
 
-from ozempic_seguro.core.validators import Validators, ValidationResult, UserType
+from ozempic_seguro.core.validators import UserType, ValidationResult, Validators
 
 
 class TestValidators:

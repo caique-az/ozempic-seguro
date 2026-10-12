@@ -4,10 +4,10 @@ Testes de integração para módulo session.
 
 import pytest
 
-from ozempic_seguro.session.session_manager import SessionManager
-from ozempic_seguro.session.login_attempts import LoginAttemptsManager
-from ozempic_seguro.session.timer_manager import TimerManager
 from ozempic_seguro.config import Config
+from ozempic_seguro.session.login_attempts import LoginAttemptsManager
+from ozempic_seguro.session.session_manager import SessionManager
+from ozempic_seguro.session.timer_manager import TimerManager
 
 
 class TestSessionIntegration:
@@ -97,7 +97,7 @@ class TestLoginAttemptsManagerDirect:
     def setup(self):
         """Setup para cada teste"""
         self.manager = LoginAttemptsManager()
-        yield
+        return
 
     def test_record_attempt_success(self):
         """Testa registro de tentativa bem-sucedida"""
@@ -145,7 +145,7 @@ class TestTimerManagerDirect:
     def setup(self):
         """Setup para cada teste"""
         self.manager = TimerManager()
-        yield
+        return
 
     def test_is_enabled_default(self):
         """Testa estado padrão do timer"""

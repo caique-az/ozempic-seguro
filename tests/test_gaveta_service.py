@@ -2,8 +2,9 @@
 Testes para GavetaService - Cobertura de operações de gavetas.
 """
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from ozempic_seguro.services.gaveta_service import GavetaService
 

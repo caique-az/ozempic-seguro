@@ -4,17 +4,17 @@ Testes estendidos para serviços - Cobertura adicional.
 
 import pytest
 
+from ozempic_seguro.services.audit_view_service import AuditFilter, AuditViewService
 from ozempic_seguro.services.auth_service import AuthService
+from ozempic_seguro.services.gaveta_service import DrawerState, PaginatedResult
+from ozempic_seguro.services.timer_control_service import TimerControlService, TimerStatus
+from ozempic_seguro.services.user_management_service import (
+    UserData,
+    UserManagementService,
+)
 from ozempic_seguro.services.user_registration_service import (
     UserRegistrationService,
 )
-from ozempic_seguro.services.user_management_service import (
-    UserManagementService,
-    UserData,
-)
-from ozempic_seguro.services.gaveta_service import DrawerState, PaginatedResult
-from ozempic_seguro.services.timer_control_service import TimerControlService, TimerStatus
-from ozempic_seguro.services.audit_view_service import AuditViewService, AuditFilter
 from ozempic_seguro.session.session_manager import SessionManager
 
 
@@ -58,7 +58,7 @@ class TestUserRegistrationServiceExtended:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserRegistrationService()
-        yield
+        return
 
     def test_validate_name_empty(self):
         """Testa validação de nome vazio"""
@@ -91,7 +91,7 @@ class TestUserManagementServiceExtended:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserManagementService()
-        yield
+        return
 
     def test_change_password_empty_confirm(self):
         """Testa alteração com confirmação vazia"""
@@ -138,7 +138,7 @@ class TestAuditViewServiceExtended:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditViewService()
-        yield
+        return
 
     def test_get_logs_with_todas_filter(self):
         """Testa logs com filtro 'Todas'"""

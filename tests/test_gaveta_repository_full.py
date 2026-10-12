@@ -14,7 +14,7 @@ class TestGavetaRepositoryGetState:
     def setup(self):
         """Setup para cada teste"""
         self.repo = GavetaRepository()
-        yield
+        return
 
     def test_get_state_returns_bool(self):
         """Testa que get_state retorna bool"""
@@ -35,7 +35,7 @@ class TestGavetaRepositorySetState:
     def setup(self):
         """Setup para cada teste"""
         self.repo = GavetaRepository()
-        yield
+        return
 
     def test_set_state_open(self):
         """Testa abertura de gaveta"""
@@ -60,7 +60,7 @@ class TestGavetaRepositoryHistory:
     def setup(self):
         """Setup para cada teste"""
         self.repo = GavetaRepository()
-        yield
+        return
 
     def test_get_history(self):
         """Testa obtenção de histórico"""

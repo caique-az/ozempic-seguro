@@ -99,7 +99,7 @@ class UserService(BaseService):
         except (InvalidUserDataError, UserAlreadyExistsError):
             raise
         except Exception as e:
-            raise InvalidUserDataError("database", f"Erro ao cadastrar usuário: {str(e)}")
+            raise InvalidUserDataError("database", f"Erro ao cadastrar usuário: {e!s}") from e
 
     def _validate_input(self, validation_data: dict) -> bool:
         """Implementação da validação de entrada obrigatória da classe base"""
@@ -209,23 +209,22 @@ class UserService(BaseService):
                 ip_address=security_context.get("ip_address"),
             )
             return dict(user)
-        else:
-            # Registra tentativa falhada para controle de força bruta
-            session_manager.record_login_attempt(username, success=False)
+        # Registra tentativa falhada para controle de força bruta
+        session_manager.record_login_attempt(username, success=False)
 
-            # Log de tentativa falha com contexto de segurança
-            security_context = SecurityLogger.log_login_attempt(
-                username=username, success=False, failure_reason="invalid_credentials"
-            )
+        # Log de tentativa falha com contexto de segurança
+        security_context = SecurityLogger.log_login_attempt(
+            username=username, success=False, failure_reason="invalid_credentials"
+        )
 
-            self.audit_repo.create_log(
-                user_id=None,
-                action="LOGIN_FAILED",
-                affected_table="USUARIOS",
-                previous_data=security_context,
-                ip_address=security_context.get("ip_address"),
-            )
-            raise InvalidCredentialsError(username)
+        self.audit_repo.create_log(
+            user_id=None,
+            action="LOGIN_FAILED",
+            affected_table="USUARIOS",
+            previous_data=security_context,
+            ip_address=security_context.get("ip_address"),
+        )
+        raise InvalidCredentialsError(username)
 
     def logout(self, user_id: int, username: str, ip_address: str | None = None) -> None:
         """Registra logout de usuário com contexto de segurança."""
@@ -350,4 +349,4 @@ class UserService(BaseService):
                 previous_data=security_context,
                 ip_address=security_context.get("ip_address"),
             )
-            raise InvalidUserDataError("password", f"Erro ao atualizar senha: {str(e)}")
+            raise InvalidUserDataError("password", f"Erro ao atualizar senha: {e!s}") from e

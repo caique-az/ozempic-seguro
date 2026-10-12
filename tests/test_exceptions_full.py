@@ -5,25 +5,25 @@ Testes completos para exceções customizadas.
 import pytest
 
 from ozempic_seguro.core.exceptions import (
-    OzempicError,
-    DatabaseError,
-    DatabaseConnectionError,
-    AuthenticationError,
-    InvalidCredentialsError,
     AccountLockedError,
-    SessionExpiredError,
-    ValidationError,
-    InvalidUserDataError,
-    WeakPasswordError,
-    UserNotFoundError,
-    UserAlreadyExistsError,
-    LastAdminError,
+    AuthenticationError,
+    ConfigurationError,
+    DatabaseConnectionError,
+    DatabaseError,
     DrawerError,
     DrawerNotFoundError,
     DrawerStateError,
-    ConfigurationError,
-    MissingConfigError,
     InvalidConfigError,
+    InvalidCredentialsError,
+    InvalidUserDataError,
+    LastAdminError,
+    MissingConfigError,
+    OzempicError,
+    SessionExpiredError,
+    UserAlreadyExistsError,
+    UserNotFoundError,
+    ValidationError,
+    WeakPasswordError,
 )
 
 
@@ -37,10 +37,8 @@ class TestBaseExceptions:
 
     def test_ozempic_error_message(self):
         """Testa mensagem da exceção base"""
-        try:
+        with pytest.raises(OzempicError, match="Custom message"):
             raise OzempicError("Custom message")
-        except OzempicError as e:
-            assert "Custom message" in str(e)
 
     def test_ozempic_error_to_dict(self):
         """Testa conversão para dict"""

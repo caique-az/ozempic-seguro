@@ -14,7 +14,7 @@ class TestAuditService:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditService()
-        yield
+        return
 
     def test_create_log(self):
         """Testa criação de log de auditoria"""
@@ -84,7 +84,7 @@ class TestAuditServiceFilters:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditService()
-        yield
+        return
 
     def test_get_logs_by_action(self):
         """Testa obtenção de logs por ação"""
@@ -119,7 +119,7 @@ class TestAuditServiceActions:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditService()
-        yield
+        return
 
     def test_log_login(self):
         """Testa log de login"""

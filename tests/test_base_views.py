@@ -2,7 +2,7 @@
 Testes para base_views - Classes base e mixins.
 """
 
-from ozempic_seguro.core.base_views import ValidatedMixin, ConfigurableComponent
+from ozempic_seguro.core.base_views import ConfigurableComponent, ValidatedMixin
 
 
 class TestValidatedMixin:

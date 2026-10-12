@@ -5,10 +5,10 @@ Testes para módulo de logging.
 import pytest
 
 from ozempic_seguro.core.logger import (
-    logger,
+    AppLogger,
     log_exceptions,
     log_method_call,
-    AppLogger,
+    logger,
 )
 
 
@@ -92,7 +92,7 @@ class TestLogExceptionsDecorator:
         def failing_function():
             raise ValueError("Test error")
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Test error"):
             failing_function()
 
 

@@ -28,9 +28,9 @@ class TestComponentsView:
     def test_components_module_imports(self):
         """Testa que os componentes podem ser importados"""
         from ozempic_seguro.views.components import (
+            Header,
             ModernButton,
             ResponsiveFrame,
-            Header,
         )
 
         assert ModernButton is not None

@@ -2,9 +2,10 @@
 Testes para TimerManager - Controle de timer e bloqueios do sistema.
 """
 
-import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch
+
+import pytest
 
 from ozempic_seguro.session.timer_manager import TimerManager
 
@@ -16,7 +17,7 @@ class TestTimerManager:
     def setup(self):
         """Setup para cada teste"""
         self.manager = TimerManager()
-        yield
+        return
 
     def test_initial_state_not_blocked(self):
         """Testa que estado inicial não está bloqueado"""
@@ -91,7 +92,7 @@ class TestTimerManagerEdgeCases:
     def setup(self):
         """Setup para cada teste"""
         self.manager = TimerManager()
-        yield
+        return
 
     def test_block_zero_minutes(self):
         """Testa bloqueio por 0 minutos"""

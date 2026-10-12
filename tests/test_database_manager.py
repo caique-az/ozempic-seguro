@@ -2,8 +2,9 @@
 Testes para DatabaseManager - Wrapper de banco de dados.
 """
 
-import pytest
 import warnings
+
+import pytest
 
 from ozempic_seguro.repositories.database import DatabaseManager
 
@@ -15,7 +16,7 @@ class TestDatabaseManager:
     def setup(self):
         """Setup para cada teste"""
         self.db = DatabaseManager()
-        yield
+        return
 
     def test_get_connection(self):
         """Testa obtenção de conexão"""
@@ -31,7 +32,7 @@ class TestDatabaseManager:
 
     def test_get_usuarios_deprecated(self):
         """Testa método deprecated get_usuarios"""
-        with warnings.catch_warnings(record=True) as w:
+        with warnings.catch_warnings(record=True):
             warnings.simplefilter("always")
 
             users = self.db.get_usuarios()

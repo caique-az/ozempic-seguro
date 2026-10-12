@@ -2,6 +2,8 @@
 Componentes de diálogos e notificações: ModernConfirmDialog, ToastNotification
 """
 
+from typing import ClassVar
+
 import customtkinter
 
 from .buttons import ModernButton
@@ -10,7 +12,13 @@ from .buttons import ModernButton
 class ModernConfirmDialog:
     """Componente de confirmação visual moderna"""
 
-    ICON_SYMBOLS = {"question": "❓", "warning": "⚠️", "error": "❌", "info": "ℹ️", "success": "✅"}
+    ICON_SYMBOLS: ClassVar[dict[str, str]] = {
+        "question": "❓",
+        "warning": "⚠️",
+        "error": "❌",
+        "info": "ℹ️",
+        "success": "✅",
+    }
 
     def __init__(
         self,
@@ -96,9 +104,14 @@ class ModernConfirmDialog:
 class ToastNotification:
     """Componente de notificação toast com animação"""
 
-    COLORS = {"info": "#2E86C1", "success": "#28A745", "warning": "#FFC107", "error": "#DC3545"}
+    COLORS: ClassVar[dict[str, str]] = {
+        "info": "#2E86C1",
+        "success": "#28A745",
+        "warning": "#FFC107",
+        "error": "#DC3545",
+    }
 
-    ICONS = {"info": "ℹ️", "success": "✅", "warning": "⚠️", "error": "❌"}
+    ICONS: ClassVar[dict[str, str]] = {"info": "ℹ️", "success": "✅", "warning": "⚠️", "error": "❌"}
 
     def __init__(self, parent, message, type="info", duration=3000):
         self.parent = parent

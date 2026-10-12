@@ -11,12 +11,12 @@ from .security import hash_password, verify_password
 from .user_repository import UserRepository
 
 __all__ = [
+    "AuditRepository",
     # Conexão
     "DatabaseConnection",
+    "GavetaRepository",
     # Repositórios
     "UserRepository",
-    "AuditRepository",
-    "GavetaRepository",
     # Segurança
     "hash_password",
     "verify_password",

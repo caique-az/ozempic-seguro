@@ -249,13 +249,13 @@ class AuditoriaFrame(customtkinter.CTkFrame):
 
         if action == "login":
             return "Login realizado com sucesso"
-        elif action == "logout":
+        if action == "logout":
             return "Logout realizado"
-        elif action == "criar":
+        if action == "criar":
             return "Novo usuário criado"
-        elif action == "atualizar":
+        if action == "atualizar":
             return "Dados do usuário atualizados"
-        elif action == "excluir":
+        if action == "excluir":
             return "Usuário removido"
 
         return ""

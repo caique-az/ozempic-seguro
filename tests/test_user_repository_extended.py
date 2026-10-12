@@ -2,8 +2,9 @@
 Testes estendidos para UserRepository - Cobertura adicional.
 """
 
-import pytest
 import uuid
+
+import pytest
 
 from ozempic_seguro.repositories.user_repository import UserRepository
 
@@ -15,7 +16,7 @@ class TestUserRepositoryExtended:
     def setup(self):
         """Setup para cada teste"""
         self.repo = UserRepository()
-        yield
+        return
 
     def test_find_by_username_existing(self):
         """Testa busca por username existente"""

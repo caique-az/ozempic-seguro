@@ -223,7 +223,7 @@ def _clear_function_cache(func: Callable, prefix: str) -> None:
     """Limpa cache de uma função específica"""
     pattern = f"{prefix}:{func.__name__}" if prefix else func.__name__
 
-    keys_to_delete = [key for key in _global_cache._cache.keys() if key.startswith(pattern)]
+    keys_to_delete = [key for key in _global_cache._cache if key.startswith(pattern)]
 
     for key in keys_to_delete:
         _global_cache.delete(key)
@@ -245,7 +245,7 @@ def invalidate_cache(pattern: str | None = None) -> int:
         return size
 
     count = 0
-    keys_to_delete = [key for key in _global_cache._cache.keys() if pattern in key]
+    keys_to_delete = [key for key in _global_cache._cache if pattern in key]
 
     for key in keys_to_delete:
         if _global_cache.delete(key):

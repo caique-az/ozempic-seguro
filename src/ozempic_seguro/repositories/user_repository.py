@@ -285,22 +285,21 @@ class UserRepository(IUserRepository):
 
     def save(self, entity: dict[str, Any]) -> bool:
         """Implementação de IRepository.save"""
-        if "id" in entity and entity["id"]:
+        if entity.get("id"):
             # Update
             return (
                 self.update_password(entity["id"], entity.get("senha", ""))
                 if "senha" in entity
                 else True
             )
-        else:
-            # Create
-            result = self.create_user(
-                entity.get("username", ""),
-                entity.get("senha", ""),
-                entity.get("nome_completo", ""),
-                entity.get("tipo", "vendedor"),
-            )
-            return result is not None
+        # Create
+        result = self.create_user(
+            entity.get("username", ""),
+            entity.get("senha", ""),
+            entity.get("nome_completo", ""),
+            entity.get("tipo", "vendedor"),
+        )
+        return result is not None
 
     def delete(self, entity_id: int) -> bool:
         """Implementação de IRepository.delete"""

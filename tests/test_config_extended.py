@@ -3,13 +3,13 @@ Testes estendidos para Config - Cobertura adicional.
 """
 
 from ozempic_seguro.config import (
-    Config,
-    SecurityConfig,
-    DatabaseConfig,
-    UIConfig,
-    LoggingConfig,
     AppConfig,
+    Config,
+    DatabaseConfig,
     EnvironmentConfig,
+    LoggingConfig,
+    SecurityConfig,
+    UIConfig,
 )
 
 

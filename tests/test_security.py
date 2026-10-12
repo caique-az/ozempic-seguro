@@ -1,5 +1,5 @@
-from ozempic_seguro.repositories.security import hash_password, verify_password
 from ozempic_seguro.core.validators import Validators
+from ozempic_seguro.repositories.security import hash_password, verify_password
 
 
 class TestSecurity:

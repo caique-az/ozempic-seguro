@@ -108,7 +108,7 @@ class GavetaRepository(IGavetaRepository):
         except sqlite3.Error as e:
             logger.error(f"Database error setting drawer state: {e}")
             self._db.rollback()
-            return False, f"Erro ao atualizar gaveta: {str(e)}"
+            return False, f"Erro ao atualizar gaveta: {e!s}"
 
     def get_history(self, drawer_number: int, limit: int = 10) -> list[tuple]:
         """
@@ -264,7 +264,7 @@ class GavetaRepository(IGavetaRepository):
 
     def save(self, entity: dict[str, Any]) -> bool:
         """Implementação de IRepository.save"""
-        if "id" in entity and entity["id"]:
+        if entity.get("id"):
             self._db.execute(
                 "UPDATE gavetas SET esta_aberta = ? WHERE id = ?",
                 (entity.get("esta_aberta", False), entity["id"]),

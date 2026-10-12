@@ -2,9 +2,11 @@
 Testes completos para SessionManager.
 """
 
-import pytest
-from unittest.mock import patch
 from datetime import datetime, timedelta
+from unittest.mock import patch
+
+import pytest
+
 from ozempic_seguro.session.session_manager import SessionManager
 
 

@@ -2,12 +2,12 @@
 Testes para StructuredLogger - Sistema de logging estruturado.
 """
 
-import logging
 import json
+import logging
 
 from ozempic_seguro.core.structured_logger import (
-    StructuredFormatter,
     SensitiveDataFilter,
+    StructuredFormatter,
     StructuredLogger,
 )
 

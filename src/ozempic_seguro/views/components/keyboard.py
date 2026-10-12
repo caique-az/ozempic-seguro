@@ -8,13 +8,13 @@ import customtkinter
 class TecladoVirtual(customtkinter.CTkFrame):
     """Virtual keyboard for data entry"""
 
-    LAYOUT = [
+    LAYOUT = (
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
         ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ç"],
         ["z", "x", "c", "v", "b", "n", "m"],
         ["MAIÚSCULAS", "LIMPAR", "ESPAÇO"],
-    ]
+    )
 
     def __init__(self, master, current_entry=None, save_command=None, **kwargs):
         super().__init__(master, fg_color="#f0f0f0", corner_radius=10, **kwargs)

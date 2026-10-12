@@ -172,8 +172,7 @@ class UserManagementService:
             if success:
                 logger.info(f"Password changed for user ID: {user_id}")
                 return OperationResult(success=True, message=message)
-            else:
-                return OperationResult(success=False, message=message, errors=[message])
+            return OperationResult(success=False, message=message, errors=[message])
 
         except WeakPasswordError as e:
             return OperationResult(success=False, message="Senha muito fraca", errors=[str(e)])
@@ -186,7 +185,7 @@ class UserManagementService:
         except Exception as e:
             logger.error(f"Error changing password: {e}")
             return OperationResult(
-                success=False, message=f"Erro ao alterar senha: {str(e)}", errors=[str(e)]
+                success=False, message=f"Erro ao alterar senha: {e!s}", errors=[str(e)]
             )
 
     def delete_user(self, user_id: int, current_user_id: int | None = None) -> OperationResult:
@@ -231,8 +230,7 @@ class UserManagementService:
             if success:
                 logger.info(f"User deleted: {user.username} (ID: {user_id})")
                 return OperationResult(success=True, message=message)
-            else:
-                return OperationResult(success=False, message=message, errors=[message])
+            return OperationResult(success=False, message=message, errors=[message])
 
         except LastAdminError:
             return OperationResult(
@@ -249,7 +247,7 @@ class UserManagementService:
         except Exception as e:
             logger.error(f"Error deleting user: {e}")
             return OperationResult(
-                success=False, message=f"Erro ao excluir usuário: {str(e)}", errors=[str(e)]
+                success=False, message=f"Erro ao excluir usuário: {e!s}", errors=[str(e)]
             )
 
     def can_modify_user(self, user_id: int) -> tuple[bool, str]:

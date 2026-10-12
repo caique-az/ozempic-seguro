@@ -351,39 +351,39 @@ class InvalidConfigError(ConfigurationError):
 # =============================================================================
 
 __all__ = [
-    # Base
-    "OzempicError",
+    "AccountLockedError",
+    # Audit
+    "AuditError",
+    "AuditLogError",
     # Authentication
     "AuthenticationError",
-    "InvalidCredentialsError",
-    "SessionExpiredError",
-    "AccountLockedError",
-    "InsufficientPermissionsError",
-    # User
-    "UserError",
-    "UserNotFoundError",
-    "UserAlreadyExistsError",
-    "LastAdminError",
-    "InvalidUserDataError",
-    # Validation
-    "ValidationError",
-    "InvalidUsernameError",
-    "WeakPasswordError",
-    "InvalidInputError",
+    # Configuration
+    "ConfigurationError",
+    "DatabaseConnectionError",
     # Database
     "DatabaseError",
-    "DatabaseConnectionError",
-    "MigrationError",
-    "IntegrityError",
     # Drawer
     "DrawerError",
     "DrawerNotFoundError",
     "DrawerStateError",
-    # Audit
-    "AuditError",
-    "AuditLogError",
-    # Configuration
-    "ConfigurationError",
-    "MissingConfigError",
+    "InsufficientPermissionsError",
+    "IntegrityError",
     "InvalidConfigError",
+    "InvalidCredentialsError",
+    "InvalidInputError",
+    "InvalidUserDataError",
+    "InvalidUsernameError",
+    "LastAdminError",
+    "MigrationError",
+    "MissingConfigError",
+    # Base
+    "OzempicError",
+    "SessionExpiredError",
+    "UserAlreadyExistsError",
+    # User
+    "UserError",
+    "UserNotFoundError",
+    # Validation
+    "ValidationError",
+    "WeakPasswordError",
 ]

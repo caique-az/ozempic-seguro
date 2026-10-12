@@ -177,8 +177,8 @@ def get_current_theme() -> BaseTheme:
 
 __all__ = [
     "BaseTheme",
-    "LightTheme",
     "DarkTheme",
+    "LightTheme",
     "ThemeManager",
     "get_current_theme",
 ]

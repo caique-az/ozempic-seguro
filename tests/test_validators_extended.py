@@ -3,10 +3,10 @@ Testes estendidos para Validators - Cobertura adicional.
 """
 
 from ozempic_seguro.core.validators import (
-    Validators,
+    UserType,
     ValidationResult,
     ValidationRule,
-    UserType,
+    Validators,
 )
 
 

@@ -4,8 +4,8 @@ Testes para módulo security - Hash de senhas.
 
 from ozempic_seguro.repositories.security import (
     hash_password,
-    verify_password,
     is_bcrypt_hash,
+    verify_password,
 )
 
 

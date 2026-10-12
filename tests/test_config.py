@@ -3,13 +3,13 @@ Testes para módulo de configuração.
 """
 
 from ozempic_seguro.config import (
-    Config,
-    SecurityConfig,
-    DatabaseConfig,
-    UIConfig,
-    LoggingConfig,
     AppConfig,
+    Config,
+    DatabaseConfig,
     EnvironmentConfig,
+    LoggingConfig,
+    SecurityConfig,
+    UIConfig,
     validate_config,
 )
 

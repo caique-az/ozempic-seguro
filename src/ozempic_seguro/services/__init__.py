@@ -9,8 +9,8 @@ from .service_factory import get_audit_service, get_user_service
 from .user_service import UserService
 
 __all__ = [
-    "UserService",
     "AuditService",
-    "get_user_service",
+    "UserService",
     "get_audit_service",
+    "get_user_service",
 ]

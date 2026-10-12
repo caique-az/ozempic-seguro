@@ -100,7 +100,7 @@ class AuditViewService:
     """
 
     DEFAULT_PAGE_SIZE = 50
-    AVAILABLE_ACTIONS = ["Todas", "LOGIN", "LOGOUT", "CRIAR", "ATUALIZAR", "EXCLUIR"]
+    AVAILABLE_ACTIONS = ("Todas", "LOGIN", "LOGOUT", "CRIAR", "ATUALIZAR", "EXCLUIR")
 
     def __init__(self):
         self._audit_service = AuditService()
@@ -174,7 +174,7 @@ class AuditViewService:
 
     def get_available_actions(self) -> list[str]:
         """Retorna lista de ações disponíveis para filtro"""
-        return self.AVAILABLE_ACTIONS.copy()
+        return list(self.AVAILABLE_ACTIONS)
 
     def get_default_filter(self) -> AuditFilter:
         """Retorna filtro padrão (últimos 7 dias)"""

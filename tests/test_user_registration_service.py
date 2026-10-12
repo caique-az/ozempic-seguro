@@ -2,12 +2,13 @@
 Testes para UserRegistrationService - Serviço de registro de usuário.
 """
 
-import pytest
 import uuid
 
+import pytest
+
 from ozempic_seguro.services.user_registration_service import (
-    UserRegistrationService,
     RegistrationResult,
+    UserRegistrationService,
     get_user_registration_service,
 )
 
@@ -19,7 +20,7 @@ class TestUserRegistrationService:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserRegistrationService()
-        yield
+        return
 
     def test_register_valid_user(self):
         """Testa registro de usuário válido"""
@@ -142,7 +143,7 @@ class TestValidationMethods:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserRegistrationService()
-        yield
+        return
 
     def test_validate_name_valid(self):
         """Testa validação de nome válido"""

@@ -6,9 +6,9 @@ import pytest
 
 from ozempic_seguro.core.cache import (
     _global_cache,
-    invalidate_cache,
-    get_cache_stats,
     cache_query,
+    get_cache_stats,
+    invalidate_cache,
     query_cache,
 )
 

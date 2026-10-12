@@ -5,9 +5,9 @@ Testes para AuditViewService - Serviço de visualização de auditoria.
 import pytest
 
 from ozempic_seguro.services.audit_view_service import (
-    AuditViewService,
-    AuditLogItem,
     AuditFilter,
+    AuditLogItem,
+    AuditViewService,
     PaginatedAuditResult,
     get_audit_view_service,
 )
@@ -73,7 +73,7 @@ class TestAuditViewService:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditViewService()
-        yield
+        return
 
     def test_get_logs_no_filter(self):
         """Testa obtenção de logs sem filtro"""
@@ -119,7 +119,7 @@ class TestAuditViewServiceEdgeCases:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditViewService()
-        yield
+        return
 
     def test_get_logs_with_date_range(self):
         """Testa logs com intervalo de datas"""
@@ -241,7 +241,7 @@ class TestAuditViewServicePagination:
     def setup(self):
         """Setup para cada teste"""
         self.service = AuditViewService()
-        yield
+        return
 
     def test_get_logs_page_2(self):
         """Testa segunda página de logs"""

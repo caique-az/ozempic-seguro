@@ -7,8 +7,8 @@ import pytest
 from ozempic_seguro.services.service_factory import (
     ServiceFactory,
     ServiceRegistry,
-    get_user_service,
     get_audit_service,
+    get_user_service,
 )
 
 
@@ -19,7 +19,7 @@ class TestServiceRegistry:
     def setup(self):
         """Setup para cada teste"""
         self.registry = ServiceRegistry()
-        yield
+        return
 
     def test_register_and_get_service(self):
         """Testa registro e obtenção de serviço"""
@@ -219,7 +219,7 @@ class TestServiceRegistryAdditional:
     def setup(self):
         """Setup para cada teste"""
         self.registry = ServiceRegistry()
-        yield
+        return
 
     def test_register_overwrite(self):
         """Testa que registro sobrescreve serviço existente"""

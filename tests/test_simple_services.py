@@ -2,6 +2,8 @@
 Testes simplificados para Services.
 """
 
+import contextlib
+
 
 class TestSimpleServices:
     """Testes básicos para serviços"""
@@ -32,8 +34,8 @@ class TestSimpleServices:
 
     def test_database_manager_singleton(self):
         """Testa padrão singleton do DatabaseManager"""
-        from ozempic_seguro.repositories.database import DatabaseManager
         from ozempic_seguro.repositories.connection import DatabaseConnection
+        from ozempic_seguro.repositories.database import DatabaseManager
 
         # Reset singletons
         DatabaseManager._instance = None
@@ -46,10 +48,8 @@ class TestSimpleServices:
 
         # Cleanup
         if hasattr(db1, "conn"):
-            try:
+            with contextlib.suppress(Exception):
                 db1.conn.close()
-            except:
-                pass
         DatabaseManager._instance = None
         DatabaseConnection._instance = None
 

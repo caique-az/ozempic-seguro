@@ -4,13 +4,13 @@ Testes estendidos para UserService - Cobertura adicional.
 
 import pytest
 
-from ozempic_seguro.services.user_service import UserService
 from ozempic_seguro.core.exceptions import (
-    UserNotFoundError,
     InvalidCredentialsError,
-    WeakPasswordError,
     InvalidUserDataError,
+    UserNotFoundError,
+    WeakPasswordError,
 )
+from ozempic_seguro.services.user_service import UserService
 
 
 class TestUserServiceAuthentication:
@@ -20,7 +20,7 @@ class TestUserServiceAuthentication:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_authenticate_invalid_password(self):
         """Testa autenticação com senha inválida"""
@@ -40,7 +40,7 @@ class TestUserServiceCRUD:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_get_all_users(self):
         """Testa listagem de todos os usuários"""
@@ -68,7 +68,7 @@ class TestUserServiceValidation:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_create_user_invalid_data(self):
         """Testa criação com dados inválidos"""
@@ -115,7 +115,7 @@ class TestUserServicePasswordManagement:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_update_password_nonexistent_user(self):
         """Testa atualização de senha para usuário inexistente"""

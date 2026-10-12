@@ -2,11 +2,12 @@
 Testes estendidos para SessionManager - Cobertura adicional.
 """
 
-import pytest
 from unittest.mock import MagicMock
 
-from ozempic_seguro.session.session_manager import SessionManager
+import pytest
+
 from ozempic_seguro.config import Config
+from ozempic_seguro.session.session_manager import SessionManager
 
 
 class TestSessionManagerExtended:

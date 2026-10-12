@@ -3,6 +3,7 @@ Testes simplificados para SessionManager.
 """
 
 import pytest
+
 from ozempic_seguro.session.session_manager import SessionManager
 
 
@@ -14,11 +15,10 @@ class TestSessionSimple:
         """Reset singleton antes e depois de cada teste"""
         SessionManager._instance = None
         yield
-        if SessionManager._instance:
-            if hasattr(SessionManager._instance, "_timeout_timer"):
-                timer = SessionManager._instance._timeout_timer
-                if timer:
-                    timer.cancel()
+        if SessionManager._instance and hasattr(SessionManager._instance, "_timeout_timer"):
+            timer = SessionManager._instance._timeout_timer
+            if timer:
+                timer.cancel()
         SessionManager._instance = None
 
     def test_singleton(self):

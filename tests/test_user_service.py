@@ -2,16 +2,18 @@
 Testes para UserService usando mocks dos repositories.
 """
 
-import pytest
 from unittest.mock import Mock, patch
-from ozempic_seguro.services.user_service import UserService
-from ozempic_seguro.services.audit_service import AuditService
+
+import pytest
+
 from ozempic_seguro.core.exceptions import (
     InvalidCredentialsError,
     InvalidUserDataError,
     LastAdminError,
     UserNotFoundError,
 )
+from ozempic_seguro.services.audit_service import AuditService
+from ozempic_seguro.services.user_service import UserService
 
 
 class TestUserService:
@@ -40,16 +42,18 @@ class TestUserService:
     @pytest.fixture
     def user_service_with_mocks(self, mock_user_repo, mock_audit_repo):
         """UserService com repositories mockados"""
-        with patch(
-            "ozempic_seguro.services.user_service.UserRepository", return_value=mock_user_repo
-        ):
-            with patch(
+        with (
+            patch(
+                "ozempic_seguro.services.user_service.UserRepository", return_value=mock_user_repo
+            ),
+            patch(
                 "ozempic_seguro.services.user_service.AuditRepository", return_value=mock_audit_repo
-            ):
-                service = UserService()
-                service.user_repo = mock_user_repo
-                service.audit_repo = mock_audit_repo
-                return service
+            ),
+        ):
+            service = UserService()
+            service.user_repo = mock_user_repo
+            service.audit_repo = mock_audit_repo
+            return service
 
     def test_audit_service_log_action(self):
         """Testa log de ação no AuditService"""
@@ -174,7 +178,7 @@ class TestUserServiceAdditional:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_get_all_users_returns_list(self):
         """Testa que get_all_users retorna lista"""

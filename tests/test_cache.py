@@ -3,7 +3,8 @@ Testes para o sistema de cache.
 """
 
 import time
-from ozempic_seguro.core.cache import MemoryCache, cached, invalidate_cache, get_cache_stats
+
+from ozempic_seguro.core.cache import MemoryCache, cached, get_cache_stats, invalidate_cache
 
 
 class TestMemoryCache:
@@ -188,14 +189,14 @@ class TestCachedDecorator:
             call_count += 1
             return x * 2
 
-        result1 = cached_func(5)
+        cached_func(5)
         assert call_count == 1
 
         # Limpa cache da função
         cached_func.clear_cache()
 
         # Próxima chamada executa novamente
-        result2 = cached_func(5)
+        cached_func(5)
         assert call_count == 2
 
     def test_invalidate_cache_pattern(self):

@@ -5,41 +5,42 @@ Verifica hierarquia, mensagens e serialização das exceções.
 """
 
 import pytest
+
 from ozempic_seguro.core.exceptions import (
-    # Base
-    OzempicError,
+    AccountLockedError,
+    # Audit
+    AuditError,
+    AuditLogError,
     # Authentication
     AuthenticationError,
-    InvalidCredentialsError,
-    SessionExpiredError,
-    AccountLockedError,
-    InsufficientPermissionsError,
-    # User
-    UserError,
-    UserNotFoundError,
-    UserAlreadyExistsError,
-    LastAdminError,
-    InvalidUserDataError,
-    # Validation
-    ValidationError,
-    InvalidUsernameError,
-    WeakPasswordError,
-    InvalidInputError,
+    # Configuration
+    ConfigurationError,
     # Database
     DatabaseError,
-    MigrationError,
-    IntegrityError,
     # Drawer
     DrawerError,
     DrawerNotFoundError,
     DrawerStateError,
-    # Audit
-    AuditError,
-    AuditLogError,
-    # Configuration
-    ConfigurationError,
-    MissingConfigError,
+    InsufficientPermissionsError,
+    IntegrityError,
     InvalidConfigError,
+    InvalidCredentialsError,
+    InvalidInputError,
+    InvalidUserDataError,
+    InvalidUsernameError,
+    LastAdminError,
+    MigrationError,
+    MissingConfigError,
+    # Base
+    OzempicError,
+    SessionExpiredError,
+    UserAlreadyExistsError,
+    # User
+    UserError,
+    UserNotFoundError,
+    # Validation
+    ValidationError,
+    WeakPasswordError,
 )
 
 
@@ -218,14 +219,17 @@ class TestExceptionRaising:
 
     def test_exception_chaining(self):
         """Deve suportar encadeamento de exceções"""
-        try:
+
+        def fail():
             try:
                 raise ValueError("Original error")
             except ValueError as e:
                 raise DatabaseError("Database failed") from e
-        except DatabaseError as exc:
-            assert exc.__cause__ is not None
-            assert isinstance(exc.__cause__, ValueError)
+
+        with pytest.raises(DatabaseError) as exc_info:
+            fail()
+
+        assert isinstance(exc_info.value.__cause__, ValueError)
 
 
 class TestDatabaseExceptions:

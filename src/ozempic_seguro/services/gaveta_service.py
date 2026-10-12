@@ -108,7 +108,7 @@ class GavetaService:
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(GavetaService, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
             cls._instance._initialize()
         return cls._instance
 
@@ -178,7 +178,7 @@ class GavetaService:
             )
         except Exception as e:
             logger.error(f"Error opening drawer {drawer_id}: {e}")
-            return False, f"Erro ao abrir a gaveta: {str(e)}"
+            return False, f"Erro ao abrir a gaveta: {e!s}"
 
     def get_history(self, drawer_id: int, limit: int = 10) -> list[tuple]:
         """Gets the history of changes for a drawer"""

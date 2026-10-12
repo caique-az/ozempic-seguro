@@ -84,7 +84,7 @@ class TimerControlService:
             return True, "Timer habilitado com sucesso"
         except Exception as e:
             logger.error(f"Error enabling timer: {e}")
-            return False, f"Erro ao habilitar timer: {str(e)}"
+            return False, f"Erro ao habilitar timer: {e!s}"
 
     def disable_timer(self) -> tuple[bool, str]:
         """
@@ -99,7 +99,7 @@ class TimerControlService:
             return True, "Timer desabilitado com sucesso"
         except Exception as e:
             logger.error(f"Error disabling timer: {e}")
-            return False, f"Erro ao desabilitar timer: {str(e)}"
+            return False, f"Erro ao desabilitar timer: {e!s}"
 
     def toggle_timer(self) -> tuple[bool, str, bool]:
         """
@@ -136,7 +136,7 @@ class TimerControlService:
             return True, f"Sistema bloqueado por {minutes} minutos"
         except Exception as e:
             logger.error(f"Error blocking system: {e}")
-            return False, f"Erro ao bloquear sistema: {str(e)}"
+            return False, f"Erro ao bloquear sistema: {e!s}"
 
     def unblock_system(self) -> tuple[bool, str]:
         """
@@ -151,7 +151,7 @@ class TimerControlService:
             return True, "Sistema desbloqueado com sucesso"
         except Exception as e:
             logger.error(f"Error unblocking system: {e}")
-            return False, f"Erro ao desbloquear sistema: {str(e)}"
+            return False, f"Erro ao desbloquear sistema: {e!s}"
 
     def is_timer_enabled(self) -> bool:
         """Verifica se timer está habilitado"""

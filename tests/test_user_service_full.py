@@ -2,15 +2,16 @@
 Testes completos para UserService - Cobertura máxima.
 """
 
-import pytest
 import uuid
 
-from ozempic_seguro.services.user_service import UserService
+import pytest
+
 from ozempic_seguro.core.exceptions import (
-    UserNotFoundError,
     InvalidUserDataError,
+    UserNotFoundError,
     WeakPasswordError,
 )
+from ozempic_seguro.services.user_service import UserService
 
 
 class TestUserServiceGetAllUsers:
@@ -20,7 +21,7 @@ class TestUserServiceGetAllUsers:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_get_all_users_returns_list(self):
         """Testa que retorna lista"""
@@ -42,7 +43,7 @@ class TestUserServiceCreateUser:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_create_user_valid(self):
         """Testa criação de usuário válido"""
@@ -92,7 +93,7 @@ class TestUserServiceDeleteUser:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_delete_user_nonexistent(self):
         """Testa exclusão de usuário inexistente"""
@@ -107,7 +108,7 @@ class TestUserServiceUpdatePassword:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserService()
-        yield
+        return
 
     def test_update_password_nonexistent(self):
         """Testa atualização de senha para usuário inexistente"""

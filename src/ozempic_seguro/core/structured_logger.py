@@ -10,6 +10,7 @@ import traceback
 from datetime import UTC, datetime
 from functools import wraps
 from pathlib import Path
+from typing import ClassVar
 
 
 class StructuredFormatter(logging.Formatter):
@@ -84,7 +85,7 @@ class StructuredFormatter(logging.Formatter):
 class SensitiveDataFilter(logging.Filter):
     """Filtro para remover dados sensíveis dos logs"""
 
-    SENSITIVE_FIELDS = [
+    SENSITIVE_FIELDS = (
         "password",
         "senha",
         "token",
@@ -94,7 +95,7 @@ class SensitiveDataFilter(logging.Filter):
         "auth",
         "ssn",
         "cpf",
-    ]
+    )
 
     def filter(self, record: logging.LogRecord) -> bool:
         """Filtra dados sensíveis do log record"""
@@ -133,7 +134,7 @@ class SensitiveDataFilter(logging.Filter):
 class StructuredLogger:
     """Logger estruturado com contexto e filtros de segurança"""
 
-    _loggers: dict[str, logging.Logger] = {}
+    _loggers: ClassVar[dict[str, logging.Logger]] = {}
 
     @classmethod
     def get_logger(
@@ -273,7 +274,7 @@ def log_execution(
             except Exception as e:
                 # Log de erro
                 logger.error(
-                    f"Error in {func.__name__}: {str(e)}",
+                    f"Error in {func.__name__}: {e!s}",
                     exc_info=True,
                     extra={
                         "event": "function_error",

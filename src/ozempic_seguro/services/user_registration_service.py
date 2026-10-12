@@ -79,9 +79,8 @@ class UserRegistrationService:
                 return RegistrationResult(
                     success=True, message=f"Usuário '{name}' cadastrado com sucesso!"
                 )
-            else:
-                logger.warning(f"User registration failed: {message}")
-                return RegistrationResult(success=False, message=message, errors=[message])
+            logger.warning(f"User registration failed: {message}")
+            return RegistrationResult(success=False, message=message, errors=[message])
 
         except UserAlreadyExistsError:
             logger.warning(f"User already exists: {username}")

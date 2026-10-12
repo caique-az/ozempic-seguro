@@ -14,7 +14,7 @@ class TestUserRepository:
     def setup(self):
         """Setup para cada teste"""
         self.repo = UserRepository()
-        yield
+        return
 
     def test_create_user_success(self):
         """Testa criação de usuário com sucesso"""
@@ -242,7 +242,7 @@ class TestUserRepositoryEdgeCases:
     def setup(self):
         """Setup para cada teste"""
         self.repo = UserRepository()
-        yield
+        return
 
     def test_get_user_by_username(self):
         """Testa busca de usuário por username"""

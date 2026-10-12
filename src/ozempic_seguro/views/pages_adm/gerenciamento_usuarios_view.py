@@ -195,7 +195,7 @@ class GerenciamentoUsuariosFrame(customtkinter.CTkFrame):
                 propagate_click(content_frame, click_handler)
 
                 # Remove cursor effects only
-                for widget in [row_frame, content_frame] + content_frame.winfo_children():
+                for widget in [row_frame, content_frame, *content_frame.winfo_children()]:
                     try:
                         if hasattr(widget, "configure"):
                             widget.configure(cursor="")

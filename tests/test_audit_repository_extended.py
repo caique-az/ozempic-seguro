@@ -14,7 +14,7 @@ class TestAuditRepositoryExtended:
     def setup(self):
         """Setup para cada teste"""
         self.repo = AuditRepository()
-        yield
+        return
 
     def test_create_log_minimal(self):
         """Testa criação de log mínimo"""

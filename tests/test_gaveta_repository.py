@@ -16,7 +16,7 @@ class TestGavetaRepository:
         """Setup para cada teste"""
         self.repo = GavetaRepository()
         self.user_repo = UserRepository()
-        yield
+        return
 
     def test_get_state_existing_drawer(self):
         """Testa obtenção de estado de gaveta existente"""
@@ -220,7 +220,7 @@ class TestGavetaRepositoryAdditional:
     def setup(self):
         """Setup para cada teste"""
         self.repo = GavetaRepository()
-        yield
+        return
 
     def test_get_history_empty(self):
         """Testa histórico de gaveta sem registros"""

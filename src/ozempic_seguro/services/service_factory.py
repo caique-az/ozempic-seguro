@@ -73,7 +73,7 @@ class ServiceRegistry:
                 self._services[service_name] = service_instance
                 return service_instance
             except Exception as e:
-                logger.error(f"Failed to create service {service_name}: {str(e)}")
+                logger.error(f"Failed to create service {service_name}: {e!s}")
                 raise
 
     def set_mock(self, service_name: str, mock_instance: Any) -> None:
@@ -220,7 +220,7 @@ def get_auth_service():
 
 __all__ = [
     "ServiceFactory",
-    "get_user_service",
     "get_audit_service",
     "get_auth_service",
+    "get_user_service",
 ]

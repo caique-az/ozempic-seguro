@@ -21,27 +21,27 @@ from .layouts import ResponsiveButtonGrid, ResponsiveFrame
 from .loading import LoadingOverlay, SplashScreen, TransitionOverlay
 
 __all__ = [
-    # Common
-    "Header",
-    "ImageCache",
-    "MainButton",
-    # Buttons
-    "ModernButton",
-    "VoltarButton",
     "FinalizarSessaoButton",
-    # Dialogs
-    "ModernConfirmDialog",
-    "ToastNotification",
-    # Layouts
-    "ResponsiveFrame",
-    "ResponsiveButtonGrid",
     # Gavetas
     "GavetaButton",
     "GavetaButtonGrid",
-    # Keyboard
-    "TecladoVirtual",
+    # Common
+    "Header",
+    "ImageCache",
     # Loading
     "LoadingOverlay",
+    "MainButton",
+    # Buttons
+    "ModernButton",
+    # Dialogs
+    "ModernConfirmDialog",
+    "ResponsiveButtonGrid",
+    # Layouts
+    "ResponsiveFrame",
     "SplashScreen",
+    # Keyboard
+    "TecladoVirtual",
+    "ToastNotification",
     "TransitionOverlay",
+    "VoltarButton",
 ]
