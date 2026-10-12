@@ -5,9 +5,9 @@ Testes para UserManagementService - Serviço de gerenciamento de usuários.
 import pytest
 
 from ozempic_seguro.services.user_management_service import (
-    UserManagementService,
-    UserData,
     OperationResult,
+    UserData,
+    UserManagementService,
     get_user_management_service,
 )
 
@@ -83,7 +83,7 @@ class TestUserManagementService:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserManagementService()
-        yield
+        return
 
     def test_get_all_users(self):
         """Testa obtenção de todos os usuários"""
@@ -188,7 +188,7 @@ class TestUserManagementServiceEdgeCases:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserManagementService()
-        yield
+        return
 
     def test_change_password_short(self):
         """Testa alteração com senha muito curta"""
@@ -278,7 +278,7 @@ class TestUserManagementServiceAdditional:
     def setup(self):
         """Setup para cada teste"""
         self.service = UserManagementService()
-        yield
+        return
 
     def test_user_data_user_type_display_vendedor(self):
         """Tests user_type_display for vendedor"""
@@ -357,7 +357,7 @@ class TestUserDataProperties:
         assert "2025-01-01" in user.created_at_display
 
 
-class TestGetUserManagementService:
+class TestGetUserManagementServiceInstance:
     """Testes para get_user_management_service"""
 
     def test_get_service_returns_instance(self):

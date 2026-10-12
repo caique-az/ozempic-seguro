@@ -2,8 +2,9 @@
 Testes para AuditRepository - Operações de auditoria.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 
 from ozempic_seguro.repositories.audit_repository import AuditRepository
 
@@ -15,7 +16,7 @@ class TestAuditRepository:
     def setup(self):
         """Setup para cada teste"""
         self.repo = AuditRepository()
-        yield
+        return
 
     def test_create_log_success(self):
         """Testa criação de log de auditoria"""
@@ -92,7 +93,7 @@ class TestAuditRepositoryFilters:
     def setup(self):
         """Setup para cada teste"""
         self.repo = AuditRepository()
-        yield
+        return
 
     def test_filter_by_table(self):
         """Testa filtro por tabela"""
@@ -136,7 +137,7 @@ class TestAuditRepositoryAdditional:
     def setup(self):
         """Setup para cada teste"""
         self.repo = AuditRepository()
-        yield
+        return
 
     def test_get_logs_empty_filter(self):
         """Testa logs com filtro que não retorna nada"""
@@ -184,14 +185,14 @@ class TestAuditRepositoryAdditional:
         assert isinstance(count, int)
 
 
-class TestAuditRepositoryFilters:
+class TestAuditRepositoryFilterCombinations:
     """Testes para filtros do AuditRepository"""
 
     @pytest.fixture(autouse=True)
     def setup(self):
         """Setup para cada teste"""
         self.repo = AuditRepository()
-        yield
+        return
 
     def test_filter_by_user(self):
         """Testa filtro por usuário"""

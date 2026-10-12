@@ -2,11 +2,12 @@
 Testes completos para SessionManager - Cobertura máxima.
 """
 
-import pytest
 from unittest.mock import MagicMock
 
-from ozempic_seguro.session.session_manager import SessionManager
+import pytest
+
 from ozempic_seguro.config import Config
+from ozempic_seguro.session.session_manager import SessionManager
 
 
 class TestSessionManagerCore:
@@ -336,7 +337,7 @@ class TestSessionManagerTimeout:
         assert self.session.get_user_id() is None
 
 
-class TestSessionManagerTimer:
+class TestSessionManagerTimerDelegation:
     """Testes de timer do sistema"""
 
     @pytest.fixture(autouse=True)
