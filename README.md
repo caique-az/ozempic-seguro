@@ -1,69 +1,81 @@
 # Ozempic Seguro
 
-Sistema desktop para controle seguro de medicamentos termolábeis. Python + CustomTkinter, 100% offline.
+[![CI](https://github.com/caique-az/ozempic-seguro/actions/workflows/ci.yml/badge.svg)](https://github.com/caique-az/ozempic-seguro/actions/workflows/ci.yml)
+[![Docs](https://github.com/caique-az/ozempic-seguro/actions/workflows/docs.yml/badge.svg)](https://caique-az.github.io/ozempic-seguro/)
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![mypy strict](https://img.shields.io/badge/mypy-strict-2a6db2)
+[![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-green)](LICENSE)
 
-## Quick Start
+Aplicação desktop para controlar o acesso a gavetas de medicamentos termolábeis (como o Ozempic) em pontos de venda. Ela roda offline em um mini PC com tela touch e garante que cada perfil faça só o que pode, que aberturas em sequência sejam bloqueadas e que toda ação fique registrada.
 
-```bash
-git clone https://github.com/CaiqueAzevedo65/Projeto-Ozempic-Seguro.git
-cd Projeto-Ozempic-Seguro
-python -m venv venv && .\venv\Scripts\activate
-pip install -e ".[dev]"
-cp .env.example .env && python run.py
+📖 **Documentação completa:** <https://caique-az.github.io/ozempic-seguro/>
+
+![Painel do administrador](docs/assets/screenshots/painel-admin.png)
+
+## Funcionalidades
+
+- **Controle de acesso por perfil**: vendedor abre, repositor fecha, técnico faz manutenção e administrador gerencia tudo.
+- **Bloqueio após abertura**: depois que uma gaveta é aberta, novas aberturas ficam bloqueadas por alguns minutos.
+- **Auditoria completa**: logins, aberturas, fechamentos e alterações de usuários, com usuário, horário e estação.
+- **Proteção contra força bruta** e **expiração de sessão por inatividade**.
+- **Interface touch** com teclados virtuais e senhas numéricas.
+
+| Gavetas | Auditoria |
+|---|---|
+| ![Gavetas](docs/assets/screenshots/gavetas.png) | ![Auditoria](docs/assets/screenshots/auditoria.png) |
+
+## Arquitetura
+
+O código é organizado em camadas, e as regras de negócio não dependem de interface nem de banco de dados:
+
+```text
+presentation ──► application ──► domain ◄── infrastructure
+ (CustomTkinter)  (casos de uso)  (regras e ports)  (SQLite, bcrypt)
+                        ▲                                 │
+                        └────────── bootstrap.py ─────────┘
 ```
 
-**Login**: credenciais definidas em `.env` (ver `OZEMPIC_ADMIN_PASSWORD` e `OZEMPIC_TECNICO_PASSWORD`)
+- **domain**: perfis, matriz de permissões, política de credenciais e interfaces (`Protocol`) para tudo que é externo.
+- **application**: casos de uso (login, abrir e fechar gavetas, gerenciar usuários, auditoria, timer) com dependências injetadas.
+- **infrastructure**: SQLite com migrações versionadas, bcrypt, relógio e configuração.
+- **presentation**: telas que apenas exibem dados e chamam os casos de uso.
+
+Veja a [página de arquitetura](https://caique-az.github.io/ozempic-seguro/arquitetura/) e as [decisões registradas (ADRs)](https://caique-az.github.io/ozempic-seguro/adr/).
+
+## Como rodar
+
+Requer Python 3.13 com Tkinter.
+
+```bash
+git clone https://github.com/caique-az/ozempic-seguro.git
+cd ozempic-seguro
+python -m venv .venv
+.venv\Scripts\activate          # Linux/macOS: source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env            # defina as senhas iniciais
+python -m ozempic_seguro
+```
+
+Na primeira execução são criados um administrador (usuário `00`) e um técnico (usuário `01`), com as senhas definidas no `.env`. Todas as variáveis estão descritas em [Primeiros passos](https://caique-az.github.io/ozempic-seguro/primeiros-passos/).
+
+## Qualidade
+
+```bash
+pytest          # testes; cobertura mínima de 95% em domínio, aplicação e infraestrutura
+ruff check .    # lint
+ruff format .   # formatação
+mypy            # tipos em modo strict
+```
+
+- Testes organizados por camada: regras puras, casos de uso com *fakes* em memória e relógio controlável, persistência com SQLite real e um teste de ponta a ponta.
+- *Smoke test* que abre todas as telas de verdade (roda onde há display, como o runner Windows do CI).
+- CI no GitHub Actions com lint, tipos e testes no Ubuntu e no Windows; documentação publicada automaticamente no GitHub Pages.
 
 ## Stack
 
-| | |
-|--|--|
-| **Core** | Python 3.13, CustomTkinter, SQLite3, bcrypt |
-| **Arquitetura** | MVC, Service Layer, Repository Pattern |
-| **Testes** | pytest (1057 testes, 58% cobertura) |
+Python 3.13 · CustomTkinter · SQLite · bcrypt · pytest · Ruff · mypy · MkDocs Material · GitHub Actions
 
-## Segurança
+## Licença
 
-- bcrypt 12 rounds, timeout 10 min, bloqueio após 3 falhas
-- Sanitização SQL/XSS, RBAC (4 tipos de usuário)
-- Auditoria completa com IP e timestamps
-
-## Variáveis de Ambiente
-
-Copie `.env.example` para `.env` e configure conforme necessário:
-
-| Variável | Descrição | Padrão | Obrigatória |
-|----------|-----------|--------|-------------|
-| `OZEMPIC_ENV` | Ambiente de execução (`development` ou `production`) | `production` | Não |
-| `OZEMPIC_ADMIN_USERNAME` | Username do administrador padrão | `00` | Sim* |
-| `OZEMPIC_ADMIN_PASSWORD` | Senha do administrador padrão | - | Sim* |
-| `OZEMPIC_TECNICO_USERNAME` | Username do técnico padrão | `01` | Sim* |
-| `OZEMPIC_TECNICO_PASSWORD` | Senha do técnico padrão | - | Sim* |
-| `OZEMPIC_BCRYPT_ROUNDS` | Rounds do bcrypt para hashing | `12` | Não |
-| `OZEMPIC_SESSION_TIMEOUT` | Timeout de sessão em minutos | `10` | Não |
-| `OZEMPIC_MAX_LOGIN_ATTEMPTS` | Máximo de tentativas de login | `3` | Não |
-| `OZEMPIC_LOCKOUT_DURATION` | Duração do bloqueio em minutos | `5` | Não |
-
-> **⚠️ IMPORTANTE**: Altere as senhas padrão em produção!
-
-## Testes
-
-```bash
-pytest                           # Todos
-pytest --cov=src/ozempic_seguro  # Com cobertura
-```
-
-## Changelog
-
-**1.3.4** (2026-01-03) - Refatoração linting, type safety, BaseUserFrame  
-**1.3.3** (2025-12-18) - 1057 testes, 58% cobertura real  
-**1.3.2** (2025-12-11) - Refatoração repositórios, DatabaseConnection  
-**1.3.1** (2025-12-09) - Componentes UI modulares, logging estruturado  
-**1.3.0** (2025-09-16) - Testes automatizados com pytest  
-**1.2.0** (2025-08-30) - Migração bcrypt, proteção força bruta  
-**1.1.0** (2025-06-25) - Service Layer, injeção de dependência  
-**1.0.0** (2024-05-30) - Versão inicial
-
----
-
-**MIT** | 📧 caiqueazevedo2005@gmail.com | [Caique Azevedo](https://github.com/CaiqueAzevedo65)
+[MIT](LICENSE) © Caique Azevedo
