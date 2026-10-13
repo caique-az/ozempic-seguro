@@ -7,5 +7,5 @@ PROJECT_ROOT = PACKAGE_DIR.parent.parent
 
 ASSETS_DIR = PACKAGE_DIR / "assets"
 DATA_DIR = PACKAGE_DIR / "data"
-MIGRATIONS_DIR = PACKAGE_DIR / "migrations"
+MIGRATIONS_DIR = PACKAGE_DIR / "infrastructure" / "persistence" / "migrations"
 LOGS_DIR = PROJECT_ROOT / "logs"
