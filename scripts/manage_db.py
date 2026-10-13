@@ -6,46 +6,49 @@ Usage:
     python scripts/manage_db.py reset                 # drop and recreate the database
     python scripts/manage_db.py reset-admin-password  # reapply OZEMPIC_ADMIN_PASSWORD
 
-Default users are created from the OZEMPIC_* environment variables (see .env.example).
+Configuration comes from the OZEMPIC_* variables and .env (see .env.example).
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from ozempic_seguro.config import Config
-from ozempic_seguro.paths import DATA_DIR
-from ozempic_seguro.repositories.user_repository import UserRepository
+from ozempic_seguro.infrastructure.persistence.database import Database
+from ozempic_seguro.infrastructure.persistence.seed import ensure_default_users
+from ozempic_seguro.infrastructure.persistence.user_repository import SqliteUserRepository
+from ozempic_seguro.infrastructure.settings import Settings
+from ozempic_seguro.infrastructure.system import BcryptPasswordHasher
 
 
-def reset_database() -> None:
-    db_path = DATA_DIR / Config.Database.DB_NAME
+def reset_database(settings: Settings) -> None:
     for suffix in ("", "-wal", "-shm"):
-        Path(f"{db_path}{suffix}").unlink(missing_ok=True)
+        Path(f"{settings.database_path}{suffix}").unlink(missing_ok=True)
 
-    # Opening the connection runs the migrations; the repository seeds the default users.
-    UserRepository()
-    print(f"Database recreated at {db_path}")
+    db = Database(settings.database_path)
+    hasher = BcryptPasswordHasher(settings.bcrypt_rounds)
+    created = ensure_default_users(SqliteUserRepository(db), hasher, settings)
+    db.close()
+    print(f"Database recreated at {settings.database_path}")
+    print("Default users: " + ", ".join(f"{u.username} ({u.role.label})" for u in created))
 
 
-def reset_admin_password() -> None:
-    username = os.getenv("OZEMPIC_ADMIN_USERNAME", "00")
-    password = os.getenv("OZEMPIC_ADMIN_PASSWORD")
-    if not password:
+def reset_admin_password(settings: Settings) -> None:
+    if not settings.admin_password:
         sys.exit("OZEMPIC_ADMIN_PASSWORD is not set")
 
-    repo = UserRepository()
-    user = repo.get_user_by_username(username)
-    if user is None:
-        sys.exit(f"Admin user '{username}' not found")
+    db = Database(settings.database_path)
+    users = SqliteUserRepository(db)
+    hasher = BcryptPasswordHasher(settings.bcrypt_rounds)
+    admin = users.get_by_username(settings.admin_username)
+    if admin is None:
+        db.close()
+        sys.exit(f"Admin user '{settings.admin_username}' not found")
 
-    repo.update_password(user["id"], password)
-    if repo.authenticate_user(username, password) is None:
-        sys.exit("Password updated but login check failed")
-    print(f"Password for '{username}' updated")
+    users.set_password_hash(admin.id, hasher.hash(settings.admin_password))
+    db.close()
+    print(f"Password for '{admin.username}' updated")
 
 
 def main() -> None:
@@ -54,15 +57,16 @@ def main() -> None:
     )
     parser.add_argument("command", choices=["reset", "reset-admin-password"])
     args = parser.parse_args()
+    settings = Settings.from_env()
 
     if args.command == "reset":
         answer = input("This deletes ALL data. Continue? [y/N] ").strip().lower()
         if answer != "y":
             print("Aborted")
             return
-        reset_database()
+        reset_database(settings)
     else:
-        reset_admin_password()
+        reset_admin_password(settings)
 
 
 if __name__ == "__main__":
