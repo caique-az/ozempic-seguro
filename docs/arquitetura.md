@@ -1,233 +1,98 @@
-# Arquitetura - Ozempic Seguro
+# Arquitetura
 
-## Visão Geral
+O código segue uma arquitetura em camadas inspirada na Clean Architecture. As regras de negócio não conhecem Tkinter, SQLite nem bcrypt: dependem apenas de interfaces (`Protocol`), e as implementações concretas são conectadas em um único ponto. Os motivos estão na [ADR 0001](adr/0001-arquitetura-em-camadas.md).
 
-Sistema desktop para controle de medicamentos termolábeis usando Python + CustomTkinter.
+## Camadas e regra de dependência
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Views (UI)                           │
-│  CustomTkinter frames, teclado virtual, componentes        │
-├─────────────────────────────────────────────────────────────┤
-│                    View Services                            │
-│  UserManagementService, UserRegistrationService, etc.      │
-├─────────────────────────────────────────────────────────────┤
-│                   Domain Services                           │
-│  UserService, AuditService, GavetaService, AuthService     │
-├─────────────────────────────────────────────────────────────┤
-│                    Repositories                             │
-│  UserRepository, AuditRepository, GavetaRepository         │
-├─────────────────────────────────────────────────────────────┤
-│                  Database Connection                        │
-│  SQLite + bcrypt + migrations                              │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    P[presentation<br/>CustomTkinter] --> A[application<br/>casos de uso]
+    A --> D[domain<br/>regras e ports]
+    I[infrastructure<br/>SQLite, bcrypt, relógio] --> D
+    B[bootstrap.py<br/>composition root] --> P
+    B --> A
+    B --> I
 ```
 
-## Estrutura de Diretórios
+As setas indicam "depende de". O domínio não depende de nada; a infraestrutura implementa as interfaces que o domínio declara; só o `bootstrap.py` conhece todas as camadas.
 
-```
+| Camada | Responsabilidade | Pode importar |
+|---|---|---|
+| `domain/` | Entidades, regras (permissões, política de credenciais), exceções e *ports* | só a biblioteca padrão |
+| `application/` | Casos de uso: orquestram o domínio, verificam permissões e registram auditoria | `domain` |
+| `infrastructure/` | SQLite, migrações, bcrypt, relógio, configuração e logs | `domain` |
+| `presentation/` | Telas e widgets; mostram dados e repassam as ações do usuário | `application`, `domain` |
+| `bootstrap.py` | Cria as implementações e injeta nos casos de uso | todas |
+
+## Estrutura de pastas
+
+```text
 src/ozempic_seguro/
-├── config.py              # Configurações centralizadas
-├── main.py                # Entry point
-├── controllers/           # NavigationController
-├── core/                  # Utilitários (cache, logger, validators, exceptions)
-├── repositories/          # Camada de persistência
-│   ├── connection.py      # Singleton de conexão SQLite
-│   ├── user_repository.py
-│   ├── audit_repository.py
-│   └── gaveta_repository.py
-├── services/              # Lógica de negócio
-│   ├── service_factory.py # DI container
-│   ├── user_service.py    # CRUD + autenticação
-│   ├── audit_service.py   # Logs de auditoria
-│   └── gaveta_service.py  # Controle de gavetas
-├── session/               # Gerenciamento de sessão
-│   ├── session_manager.py # Singleton de sessão
-│   ├── login_attempts.py  # Controle de força bruta
-│   └── timer_manager.py   # Timer de bloqueio
-└── views/                 # Interface gráfica
-    ├── components/        # Componentes reutilizáveis
-    ├── pages_adm/         # Telas administrativas
-    └── pages_iniciais/    # Telas de usuário
+├── domain/
+│   ├── users.py           # User, Role, CredentialPolicy
+│   ├── permissions.py     # matriz perfil × permissão
+│   ├── drawers.py         # DrawerEvent, DrawerAction
+│   ├── audit.py           # AuditAction, AuditEntry, AuditFilter
+│   ├── exceptions.py      # DomainError e subclasses (mensagens para o usuário)
+│   └── ports.py           # UserRepository, DrawerRepository, AuditLog, PasswordHasher, Clock
+├── application/
+│   ├── auth.py            # login, logout, expiração por inatividade
+│   ├── drawers.py         # abrir, fechar, histórico
+│   ├── users.py           # cadastro, troca de senha, desativação
+│   ├── audit.py           # consulta da auditoria
+│   ├── timer.py           # bloqueio após abertura
+│   ├── state.py           # Session, LoginThrottle, SystemLock (estado em memória)
+│   └── pagination.py      # Page[T]
+├── infrastructure/
+│   ├── settings.py        # Settings (variáveis OZEMPIC_* e .env)
+│   ├── system.py          # SystemClock, BcryptPasswordHasher
+│   ├── logs.py            # arquivo de log com rotação
+│   └── persistence/
+│       ├── database.py    # conexão, transações, migrações
+│       ├── migrations/    # 001_initial.sql, 002_indexes.sql, ...
+│       ├── *_repository.py
+│       └── seed.py        # usuários padrão
+├── presentation/
+│   ├── app.py             # janela principal, verificação de inatividade
+│   ├── navigation.py      # troca de telas e fluxo da sessão
+│   ├── formatting.py      # conversões de datas e rótulos (sem Tk)
+│   ├── screens/           # uma tela por etapa do fluxo; admin/ para o painel
+│   └── widgets/           # botões, diálogos, teclados, grade de gavetas, tabela
+├── bootstrap.py           # build_services()
+└── main.py                # ponto de entrada
 ```
 
-## Padrões Utilizados
+## Composition root
 
-### 1. Repository Pattern
-Separa lógica de persistência da lógica de negócio.
+`bootstrap.build_services(settings)` cria o banco, os repositórios e os casos de uso e os devolve em um objeto `Services`. Não há singletons nem *service locator*: cada objeto recebe suas dependências pelo construtor.
 
 ```python
-# Repositório cuida apenas de SQL
-class UserRepository:
-    def create_user(self, username, senha, nome, tipo) -> int
-    def authenticate_user(self, username, password) -> Optional[Dict]
-    def delete_user(self, user_id) -> bool
-
-# Service cuida de regras de negócio
-class UserService:
-    def create_user(self, ...) -> Tuple[bool, str]  # Valida, cria, audita
+settings = Settings.from_env()
+services = build_services(settings)
+services.auth.login("00", "1234")
+services.drawers.open(1001)
 ```
 
-### 2. Service Factory (DI Container)
-Gerencia instâncias singleton de serviços.
+Isso permite que os testes montem os casos de uso com implementações em memória (veja `tests/application/conftest.py`) e que um teste de ponta a ponta use as implementações reais (veja `tests/test_bootstrap.py`).
 
-```python
-from services.service_factory import ServiceFactory
+## Fluxo de uma requisição
 
-user_service = ServiceFactory.get_user_service()
-audit_service = ServiceFactory.get_audit_service()
+Abrir uma gaveta passa por todas as camadas:
 
-# Para testes
-ServiceFactory.set_mock_user_service(mock)
-```
+1. **Apresentação**: `DrawerButton` recebe o toque, pede confirmação se o timer está ligado e chama `services.drawers.open(1001)`.
+2. **Aplicação**: `DrawerService.open` obtém o usuário da sessão, verifica a permissão, consulta o `SystemLock`, grava a mudança, registra a auditoria e inicia o bloqueio.
+3. **Domínio**: fornece a matriz de permissões (`require`, `opening_locks_system`) e as exceções.
+4. **Infraestrutura**: `SqliteDrawerRepository.set_open` atualiza o estado e o histórico na mesma transação; `SqliteAuditRepository.record` grava o evento.
 
-### 3. View Services (Application Services)
-Encapsulam lógica de UI complexa, delegando para Domain Services.
+Se uma regra é violada, o caso de uso lança uma `DomainError` com mensagem para o usuário, e `Screen.attempt` a exibe. A interface nunca decide se uma ação é permitida.
 
-```python
-# View Service - usado pelas views
-class UserManagementService:
-    def get_all_users(self) -> List[UserData]  # Retorna DTOs
-    def change_password(self, ...) -> OperationResult
+## Estado em memória e tempo
 
-# Domain Service - lógica de negócio pura
-class UserService:
-    def update_password(self, ...) -> Tuple[bool, str]
-```
+`Session`, `LoginThrottle` e `SystemLock` recebem um `Clock`. Nenhum deles usa threads ou timers: a interface consulta o estado periodicamente com `after()` do Tkinter (que não é thread-safe), e os testes avançam o relógio sem esperar. Detalhes na [ADR 0003](adr/0003-estado-sem-threads.md).
 
-### 4. Singleton Pattern
-Usado em: `DatabaseConnection`, `SessionManager`, `GavetaService`
+## Tratamento de erros
 
-```python
-class SessionManager:
-    _instance = None
-    
-    @classmethod
-    def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
-```
-
-### 5. DTOs (Data Transfer Objects)
-Cada service expõe DTOs para comunicação com views:
-
-| Service | DTOs |
-|---------|------|
-| `GavetaService` | `DrawerState`, `DrawerHistoryItem`, `PaginatedResult` |
-| `AuthService` | `LoginResult`, `UserPanel` (enum) |
-| `UserManagementService` | `UserData`, `OperationResult` |
-| `UserRegistrationService` | `RegistrationResult` |
-| `TimerControlService` | `TimerStatus` |
-| `AuditViewService` | `AuditLogItem`, `AuditFilter`, `PaginatedAuditResult` |
-
-```python
-from services.gaveta_service import GavetaService, DrawerState, PaginatedResult
-from services.auth_service import AuthService, LoginResult
-```
-
-## Segurança
-
-### Autenticação
-- **bcrypt** (12 rounds) para hash de senhas
-- Senhas numéricas de 4-8 dígitos (teclado virtual)
-- Bloqueio após 3 tentativas falhas (5 min)
-
-### Sessão
-- Timeout de 10 min por inatividade
-- Timer de bloqueio após abertura de gaveta (5 min)
-
-### Auditoria
-- Todas as ações são logadas com timestamp, IP, user_id
-- Logs estruturados em JSON
-
-## Fluxo de Dados
-
-### Login
-```
-View → UserService.authenticate() → UserRepository.authenticate_user()
-                ↓
-        SessionManager.set_current_user()
-                ↓
-        AuditRepository.create_log()
-```
-
-### Abertura de Gaveta
-```
-View → GavetaService.open_drawer() → GavetaRepository.set_state()
-                ↓
-        SessionManager.block_for_minutes(5)
-                ↓
-        AuditRepository.create_log()
-```
-
-## Exceções Customizadas
-
-Hierarquia em `core/exceptions.py`:
-
-```
-OzempicError
-├── AuthenticationError
-│   ├── InvalidCredentialsError
-│   ├── SessionExpiredError
-│   └── AccountLockedError
-├── UserError
-│   ├── UserNotFoundError
-│   ├── UserAlreadyExistsError
-│   └── LastAdminError
-├── ValidationError
-│   ├── InvalidUsernameError
-│   └── WeakPasswordError
-├── DatabaseError
-│   ├── ConnectionError
-│   └── MigrationError
-└── DrawerError
-    ├── DrawerNotFoundError
-    └── DrawerStateError
-```
-
-## Testes
-
-```bash
-pytest                           # Todos os testes
-pytest --cov=src/ozempic_seguro  # Com cobertura
-pytest -m unit                   # Apenas unitários
-pytest -m integration            # Apenas integração
-```
-
-### Estrutura
-- `tests/test_*.py` - Testes unitários e integração
-- Fixtures em `conftest.py`
-- Mocks via `ServiceFactory.set_mock_*()`
-
-## Configuração
-
-Todas as configurações em `config.py`:
-
-| Classe | Responsabilidade |
-|--------|-----------------|
-| `SecurityConfig` | bcrypt rounds, timeouts, limites |
-| `DatabaseConfig` | SQLite path, pragmas |
-| `UIConfig` | Cores, dimensões, fontes |
-| `LoggingConfig` | Níveis, rotação |
-| `AppConfig` | Versão, diretórios |
-
-## Decisões de Design
-
-### Por que senhas de 4-8 dígitos?
-Sistema usa teclado virtual numérico para entrada rápida em ambiente de farmácia.
-A segurança é garantida por:
-- Bloqueio após 3 tentativas
-- Timeout de sessão
-- Ambiente 100% offline
-
-### Por que SQLite?
-- Aplicação desktop single-user
-- Sem necessidade de servidor
-- Portabilidade (arquivo único)
-- Performance adequada para o caso de uso
-
-### Por que CustomTkinter?
-- Interface moderna sem dependências pesadas
-- Cross-platform (Windows foco principal)
-- Widgets nativos com tema dark/light
+- `DomainError` e subclasses: violações de regra, sempre com mensagem pronta para o usuário.
+- `ConfigurationError`: configuração inválida, reportada antes de abrir a janela.
+- `MigrationError`: falha ao aplicar uma migração; a aplicação não inicia com o schema pela metade.
+- Erros inesperados são registrados em `logs/app.log`.

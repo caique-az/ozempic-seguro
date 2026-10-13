@@ -111,7 +111,8 @@ Desktop.ini
 !/src/ozempic_seguro/assets/*.png
 !/src/ozempic_seguro/assets/*.jpg
 !/src/ozempic_seguro/assets/*.jpeg
-!/src/ozempic_seguro/assets/*.pdf 
+!/src/ozempic_seguro/assets/*.pdf
+!/docs/assets/screenshots/*.png
 # Temporary test files
 tests/test_database.py.bak
 temp/
@@ -119,3 +120,6 @@ tmp/
 
 # Local virtualenv
 .venv/
+
+# MkDocs build output
+site/
