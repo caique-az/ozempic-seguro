@@ -57,6 +57,31 @@ class TestSettings:
         assert settings.admin_username == "77"
         assert settings.session_timeout_minutes == 30
 
+    def test_inline_comments_are_ignored(self, tmp_path):
+        env_file = tmp_path / ".env"
+        env_file.write_text(
+            "OZEMPIC_SESSION_TIMEOUT=15        # minutos\nOZEMPIC_ADMIN_PASSWORD=12#34\n",
+            encoding="utf-8",
+        )
+
+        values = read_env_file(env_file)
+
+        assert values["OZEMPIC_SESSION_TIMEOUT"] == "15"
+        assert values["OZEMPIC_ADMIN_PASSWORD"] == "12#34"
+
+    def test_example_file_is_valid_with_every_option_enabled(self, tmp_path):
+        example = Path(__file__).parents[2] / ".env.example"
+        enabled = tmp_path / ".env"
+        enabled.write_text(
+            example.read_text(encoding="utf-8").replace("# OZEMPIC_", "OZEMPIC_"),
+            encoding="utf-8",
+        )
+
+        settings = Settings.from_env({}, env_file=enabled)
+
+        assert settings.session_timeout_minutes == 10
+        assert settings.drawer_lock_minutes == 5
+
     def test_missing_env_file_is_ignored(self, tmp_path):
         assert read_env_file(tmp_path / "missing.env") == {}
 

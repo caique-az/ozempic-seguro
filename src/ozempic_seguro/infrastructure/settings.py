@@ -1,6 +1,7 @@
 """Runtime configuration read from environment variables and an optional .env file."""
 
 import os
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -89,7 +90,7 @@ class Settings:
 
 
 def read_env_file(path: Path) -> dict[str, str]:
-    """Parse KEY=VALUE lines, ignoring blanks, comments and surrounding quotes."""
+    """Parse KEY=VALUE lines, ignoring blanks, comments (also inline) and surrounding quotes."""
     if not path.is_file():
         return {}
     values = {}
@@ -98,5 +99,6 @@ def read_env_file(path: Path) -> dict[str, str]:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, value = line.partition("=")
+        value = re.split(r"\s#", value, maxsplit=1)[0]
         values[key.strip()] = value.strip().strip("'\"")
     return values
