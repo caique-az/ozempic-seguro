@@ -11,25 +11,26 @@ from ozempic_seguro.infrastructure.settings import Settings
 pytestmark = pytest.mark.ui
 
 
-@pytest.fixture
-def app(tmp_path):
-    try:
-        tkinter.Tk().destroy()
-    except tkinter.TclError:
-        pytest.skip("no display available")
-
+@pytest.fixture(scope="module")
+def app(tmp_path_factory):
+    # One Tk root for the whole module: creating a second root in the same process is
+    # unreliable on Windows virtualenvs ("Can't find a usable init.tcl").
     from ozempic_seguro.presentation.app import MainApp
 
     services = build_services(
         Settings(
-            database_path=tmp_path / "ui.db",
+            database_path=tmp_path_factory.mktemp("ui") / "ui.db",
             bcrypt_rounds=10,
             admin_password="1111",
             technician_password="2222",
         )
     )
+    try:
+        main = MainApp(services)
+    except tkinter.TclError:
+        services.close()
+        pytest.skip("no display available")
     errors = []
-    main = MainApp(services)
     main.report_callback_exception = lambda *exc: errors.append(exc)
     yield main
     main.close()
