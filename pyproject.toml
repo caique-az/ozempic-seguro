@@ -99,51 +99,49 @@ known-first-party = ["ozempic_seguro"]
 
 [tool.mypy]
 python_version = "3.13"
-warn_return_any = true
-warn_unused_configs = true
+files = ["src/ozempic_seguro"]
+strict = true
 ignore_missing_imports = true
-exclude = [
-    "tests/",
-    "build/",
-    "dist/",
-]
+
+[[tool.mypy.overrides]]
+# CustomTkinter ships without type hints, so its widgets are typed as Any.
+module = "ozempic_seguro.presentation.*"
+disallow_subclassing_any = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
 addopts = [
-    "--verbose",
-    "--cov=src/ozempic_seguro",
-    "--cov-report=html:htmlcov",
-    "--cov-report=term-missing",
-    "--cov-fail-under=50",
-    "--tb=short",
     "--import-mode=importlib",
+    "--strict-markers",
+    "--cov=ozempic_seguro",
+    "--cov-report=term-missing:skip-covered",
+    "--tb=short",
 ]
 markers = [
-    "unit: Unit tests",
-    "integration: Integration tests",
-    "slow: Slow running tests",
-    "ui: UI related tests",
+    "ui: renders real Tk windows; skipped automatically when no display is available",
 ]
+filterwarnings = ["error"]
 
 [tool.coverage.run]
-source = ["src/ozempic_seguro"]
+source = ["ozempic_seguro"]
+branch = true
 omit = [
-    "*/tests/*",
-    "*/__pycache__/*",
-    "*/encrypted_database.py",
-    "*main.py",
+    # The UI is exercised by the smoke tests in tests/presentation, which only run where
+    # a display exists, so it is left out of the threshold to keep it stable across CI runners.
+    "*/ozempic_seguro/presentation/*",
+    "*/ozempic_seguro/main.py",
+    "*/ozempic_seguro/__main__.py",
+    "*/ozempic_seguro/_version.py",
 ]
 
 [tool.coverage.report]
+fail_under = 95
+show_missing = true
 exclude_lines = [
     "pragma: no cover",
-    "def __repr__",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    # Ports are interface declarations; their bodies never run.
+    'class .*\(Protocol\):',
     '^\s*\.\.\.$',
 ]

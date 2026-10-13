@@ -10,14 +10,15 @@ repos:
         args: ['--fix']
       - id: ruff-format
 
-  # Type checking com MyPy
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+  # Type checking com MyPy (usa o ambiente do projeto e a configuração do pyproject.toml)
+  - repo: local
     hooks:
       - id: mypy
-        files: ^src/
-        args: ['--ignore-missing-imports']
-        additional_dependencies: []
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        pass_filenames: false
 
   # Hooks gerais
   - repo: https://github.com/pre-commit/pre-commit-hooks
