@@ -17,7 +17,7 @@ Reescrita da arquitetura em camadas (veja a [ADR 0001](adr/0001-arquitetura-em-c
 - Tela de controle do timer disponível também para administradores, com opção de remover um bloqueio ativo.
 - A aplicação pode ser iniciada com `python -m ozempic_seguro`.
 - Ruff como formatador e linter, mypy em modo strict e cobertura mínima de 95% nas camadas de lógica.
-- Documentação publicada com MkDocs Material.
+- Documentação em Markdown na pasta `docs/`.
 
 ### Adicionado
 

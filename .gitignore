@@ -120,6 +120,3 @@ tmp/
 
 # Local virtualenv
 .venv/
-
-# MkDocs build output
-site/

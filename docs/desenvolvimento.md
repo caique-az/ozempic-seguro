@@ -14,8 +14,6 @@ ruff format .               # formata
 ruff check .                # lint
 mypy                        # tipos (modo strict)
 pre-commit install          # roda ruff e mypy a cada commit
-
-mkdocs serve                # documentação em http://127.0.0.1:8000 (requer .[docs])
 ```
 
 ## Testes
@@ -45,7 +43,7 @@ A cobertura (com branches) mede domínio, aplicação e infraestrutura, com mín
 - **Ruff** formata e faz o lint (inclui ordenação de imports, regras de pytest, pathlib e proibição de `print`).
 - **mypy** roda em modo strict no pacote inteiro. A única concessão é na interface, que herda de widgets do CustomTkinter sem tipagem.
 - O **CI** (`.github/workflows/ci.yml`) roda lint e tipos no Ubuntu e os testes no Ubuntu e no Windows.
-- A **documentação** é publicada no GitHub Pages por `.github/workflows/docs.yml` a cada push na `main`.
+- A **documentação** é Markdown puro em `docs/`, lido direto no GitHub; `tests/test_docs.py` falha se algum link relativo estiver quebrado.
 
 ## Convenções
 

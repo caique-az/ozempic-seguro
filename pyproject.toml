@@ -32,15 +32,12 @@ dev = [
     "mypy==1.13.0",
     "pre-commit>=4.0",
 ]
-docs = [
-    "mkdocs-material==9.5.49",
-]
 
 [project.urls]
 Homepage = "https://github.com/caique-az/ozempic-seguro"
-Documentation = "https://caique-az.github.io/ozempic-seguro/"
+Documentation = "https://github.com/caique-az/ozempic-seguro/tree/main/docs"
 Repository = "https://github.com/caique-az/ozempic-seguro.git"
-Changelog = "https://caique-az.github.io/ozempic-seguro/changelog/"
+Changelog = "https://github.com/caique-az/ozempic-seguro/blob/main/docs/changelog.md"
 
 [project.scripts]
 ozempic-seguro = "ozempic_seguro.main:main"
