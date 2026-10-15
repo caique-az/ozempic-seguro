@@ -15,17 +15,10 @@ python -m venv .venv
 
 Ative o ambiente virtual:
 
-=== "Windows"
-
-    ```powershell
-    .venv\Scripts\activate
-    ```
-
-=== "Linux / macOS"
-
-    ```bash
-    source .venv/bin/activate
-    ```
+```bash
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Linux / macOS
+```
 
 Instale o projeto com as ferramentas de desenvolvimento:
 
@@ -57,8 +50,8 @@ O `.env` é lido na inicialização. Variáveis definidas no ambiente têm prior
 | `OZEMPIC_DB_PATH` | Caminho do arquivo SQLite | `src/ozempic_seguro/data/ozempic_seguro.db` |
 | `OZEMPIC_ENV` | `development` ativa logs detalhados no console | `production` |
 
-!!! warning "Senhas iniciais"
-    Os usuários padrão só são criados quando ainda não existem. Se nenhuma senha for configurada, o sistema usa uma senha de fallback documentada e registra um aviso no log. Defina as senhas no `.env` antes de usar o equipamento em produção.
+> [!WARNING]
+> **Senhas iniciais.** Os usuários padrão só são criados quando ainda não existem. Se nenhuma senha for configurada, o sistema usa uma senha de fallback documentada e registra um aviso no log. Defina as senhas no `.env` antes de usar o equipamento em produção.
 
 Valores inválidos (por exemplo, texto em um campo numérico) impedem a inicialização com uma mensagem explicando qual variável corrigir.
 

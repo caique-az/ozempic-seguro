@@ -37,4 +37,4 @@ Aplicação desktop para controlar o acesso a gavetas de medicamentos termolábe
 
 - Para rodar o projeto: [Primeiros passos](primeiros-passos.md).
 - Para entender o que o sistema garante: [Regras de negócio](regras-de-negocio.md).
-- Para entender o código: [Arquitetura](arquitetura.md) e as [decisões registradas](adr/index.md).
+- Para entender o código: [Arquitetura](arquitetura.md) e as [decisões registradas](adr/README.md).

@@ -54,8 +54,8 @@ erDiagram
     }
 ```
 
-!!! note "Coluna `endereco_ip`"
-    O sistema é offline, então a coluna guarda o nome da estação que gerou o evento. O nome foi mantido por compatibilidade com o schema original.
+> [!NOTE]
+> **Coluna `endereco_ip`.** O sistema é offline, então a coluna guarda o nome da estação que gerou o evento. O nome foi mantido por compatibilidade com o schema original.
 
 ## Datas e fuso horário
 
@@ -74,8 +74,8 @@ As migrações ficam em `src/ozempic_seguro/infrastructure/persistence/migration
 | 001 | Tabelas `usuarios`, `gavetas`, `historico_gavetas` e `auditoria` |
 | 002 | Índices para o histórico de gavetas e para a auditoria |
 
-!!! tip "Alterando o schema"
-    Crie um novo arquivo com o próximo número. Nunca edite uma migração já publicada: bancos existentes não a executariam de novo.
+> [!TIP]
+> **Alterando o schema.** Crie um novo arquivo com o próximo número. Nunca edite uma migração já publicada: bancos existentes não a executariam de novo.
 
 ## Exclusão de usuários
 
