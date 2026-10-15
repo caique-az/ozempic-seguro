@@ -2,15 +2,7 @@
 # Instale com: pip install pre-commit && pre-commit install
 
 repos:
-  # Formatação de código com Black
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
-    hooks:
-      - id: black
-        language_version: python3.13
-        args: ['--line-length=100']
-
-  # Linting e formatação com Ruff (substitui flake8 + isort)
+  # Lint e formatação com Ruff (substitui black, isort e flake8)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.8.4
     hooks:
@@ -18,13 +10,15 @@ repos:
         args: ['--fix']
       - id: ruff-format
 
-  # Type checking com MyPy
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+  # Type checking com MyPy (usa o ambiente do projeto e a configuração do pyproject.toml)
+  - repo: local
     hooks:
       - id: mypy
-        args: ['--ignore-missing-imports']
-        additional_dependencies: []
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        pass_filenames: false
 
   # Hooks gerais
   - repo: https://github.com/pre-commit/pre-commit-hooks

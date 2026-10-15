@@ -28,15 +28,16 @@ dependencies = [
 dev = [
     "pytest==8.3.4",
     "pytest-cov==7.0.0",
-    "pytest-mock==3.15.1",
-    "black==24.10.0",
     "ruff==0.8.4",
     "mypy==1.13.0",
+    "pre-commit>=4.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/CaiqueAzevedo65/Projeto-Ozempic-Seguro"
-Repository = "https://github.com/CaiqueAzevedo65/Projeto-Ozempic-Seguro.git"
+Homepage = "https://github.com/caique-az/ozempic-seguro"
+Documentation = "https://github.com/caique-az/ozempic-seguro/tree/main/docs"
+Repository = "https://github.com/caique-az/ozempic-seguro.git"
+Changelog = "https://github.com/caique-az/ozempic-seguro/blob/main/docs/changelog.md"
 
 [project.scripts]
 ozempic-seguro = "ozempic_seguro.main:main"
@@ -54,32 +55,15 @@ fallback_version = "1.3.4"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.black]
-line-length = 100
-target-version = ["py313"]
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-    | \.venv
-    | __pycache__
-    | \.mypy_cache
-    | build
-    | dist
-)/
-'''
-
 [tool.ruff]
 target-version = "py313"
 line-length = 100
-exclude = [
-    ".git",
-    "__pycache__",
-    ".venv",
-    ".mypy_cache",
-    "build",
-    "dist",
-]
+src = ["src", "tests"]
+extend-exclude = ["src/ozempic_seguro/_version.py"]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
 
 [tool.ruff.lint]
 select = [
@@ -87,71 +71,79 @@ select = [
     "W",      # pycodestyle warnings
     "F",      # Pyflakes
     "I",      # isort
+    "N",      # pep8-naming
     "B",      # flake8-bugbear
     "C4",     # flake8-comprehensions
     "UP",     # pyupgrade
     "SIM",    # flake8-simplify
+    "RET",    # flake8-return
+    "PIE",    # flake8-pie
+    "PT",     # flake8-pytest-style
+    "PTH",    # flake8-use-pathlib
+    "T20",    # flake8-print
+    "RUF",    # Ruff-specific rules
 ]
 ignore = [
-    "E501",   # line too long (handled by black)
+    "E501",   # line too long (handled by the formatter)
     "B008",   # function call in default argument
     "B026",   # star-arg after keyword arg (unavoidable in CustomTkinter super().__init__)
 ]
+
+# Emoji used as icons in the UI
+allowed-confusables = ["ℹ", "➕"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["T20"]
+"scripts/**" = ["T20"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["ozempic_seguro"]
 
 [tool.mypy]
 python_version = "3.13"
-warn_return_any = true
-warn_unused_configs = true
+files = ["src/ozempic_seguro"]
+strict = true
 ignore_missing_imports = true
-exclude = [
-    "tests/",
-    "build/",
-    "dist/",
-]
 
-[tool.isort]
-profile = "black"
-line_length = 100
-skip_gitignore = true
-known_first_party = ["ozempic_seguro"]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+[[tool.mypy.overrides]]
+# CustomTkinter ships without type hints, so its widgets are typed as Any.
+module = "ozempic_seguro.presentation.*"
+disallow_subclassing_any = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
+pythonpath = ["src"]
 addopts = [
-    "--verbose",
-    "--cov=src/ozempic_seguro",
-    "--cov-report=html:htmlcov",
-    "--cov-report=term-missing",
-    "--cov-fail-under=50",
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--cov=ozempic_seguro",
+    "--cov-report=term-missing:skip-covered",
     "--tb=short",
 ]
 markers = [
-    "unit: Unit tests",
-    "integration: Integration tests",
-    "slow: Slow running tests",
-    "ui: UI related tests",
+    "ui: renders real Tk windows; skipped automatically when no display is available",
 ]
+filterwarnings = ["error"]
 
 [tool.coverage.run]
-source = ["src/ozempic_seguro"]
+source = ["ozempic_seguro"]
+branch = true
 omit = [
-    "*/tests/*",
-    "*/__pycache__/*",
-    "*/encrypted_database.py",
-    "*main.py",
+    # The UI is exercised by the smoke tests in tests/presentation, which only run where
+    # a display exists, so it is left out of the threshold to keep it stable across CI runners.
+    "*/ozempic_seguro/presentation/*",
+    "*/ozempic_seguro/main.py",
+    "*/ozempic_seguro/__main__.py",
+    "*/ozempic_seguro/_version.py",
 ]
 
 [tool.coverage.report]
+fail_under = 95
+show_missing = true
 exclude_lines = [
     "pragma: no cover",
-    "def __repr__",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    # Ports are interface declarations; their bodies never run.
+    'class .*\(Protocol\):',
+    '^\s*\.\.\.$',
 ]
